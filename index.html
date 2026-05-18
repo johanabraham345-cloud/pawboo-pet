@@ -1,135 +1,326 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pawboo Pet Supply Hypermarket</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-    <header class="main-header">
-        <div class="header-container">
-            <a href="#" class="logo">PAWBOO<span>.</span></a>
-            <nav class="nav-menu">
-                <a href="#shop" class="nav-link">Explore Supplies</a>
-                <a href="#reviews" class="nav-link">Client Reviews</a>
-                <a href="#inquiries" class="nav-link">Direct Desk</a>
-            </nav>
-            <div class="header-actions">
-                <button id="adminToggleBtn" class="btn btn-secondary">
-                    <i data-lucide="shield-alert"></i> Control Panel
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <section class="hero-section">
-        <div class="hero-backdrop-layer"></div>
-        <div class="hero-container">
-            <span class="badge premium-badge">Premium Pet Supply Ecosystem</span>
-            <h1>The Next Gen Hypermarket</h1>
-            <p>Moving past outdated, basic pet templates. Experience professional premium tools, specialized nutritional formulas, and non-toxic sanitation gear.</p>
-            <button class="btn btn-gold" onclick="document.getElementById('shop').scrollIntoView({behavior: 'smooth'})">
-                Explore Inventory <i data-lucide="chevron-right"></i>
-            </button>
-        </div>
-    </section>
-
-    <main id="shop" class="section-container">
-        <div class="section-header-vertical">
-            <span class="section-subtitle">Categorized Logistics Matrix</span>
-            <h2 class="section-title">Premium Supply Catalog</h2>
-            
-            <div class="filter-tab-row">
-                <button class="filter-btn active" data-category="all">All Supplies</button>
-                <button class="filter-btn" data-category="foods">Premium Foods</button>
-                <button class="filter-btn" data-category="care">Animal Care & Tools</button>
-                <button class="filter-btn" data-category="cleaning">Cleaning Products</button>
-            </div>
-        </div>
-
-        <div id="productGrid" class="product-grid">
-            </div>
-    </main>
-
-    <section id="reviews" class="section-container reviews-dark-bg">
-        <div class="section-header-vertical" style="align-items: center; text-align: center;">
-            <span class="section-subtitle">Verified Local Transcripts</span>
-            <h2 class="section-title">Customer Experiences</h2>
-        </div>
-        <div class="reviews-masonry" id="reviewsContainer">
-            </div>
-    </section>
-
-    <section id="inquiries" class="section-container">
-        <div class="inquiry-grid">
-            
-            <div class="inquiry-card">
-                <div class="component-header">
-                    <i data-lucide="help-circle" class="accent-icon"></i>
-                    <h3>Public Knowledge Base</h3>
-                </div>
-                <p class="component-desc">Have stock availability or logistical inquiries? Broadcast your query publicly below.</p>
-                
-                <form id="faqForm" class="hub-form-inline">
-                    <input type="text" id="faqInput" placeholder="Type your supply query here..." required autocomplete="off">
-                    <button type="submit" class="btn btn-primary">Broadcast</button>
-                </form>
-
-                <div class="faq-list" id="faqList">
-                    </div>
-            </div>
-
-            <div class="inquiry-card">
-                <div class="component-header">
-                    <i data-lucide="send" class="accent-icon"></i>
-                    <h3>Direct Supply Inquiry Desk</h3>
-                </div>
-                <p class="component-desc">Submit immediate procurement details directly to our central inventory managers.</p>
-                
-                <form id="enterpriseInquiryForm" class="structured-form">
-                    <div class="form-row-dual">
-                        <div class="form-group">
-                            <label>Your Name</label>
-                            <input type="text" id="clientName" placeholder="Client Name" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Email Address</label>
-                            <input type="email" id="clientEmail" placeholder="name@domain.com" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Target Requirements Description</label>
-                        <textarea id="inquiryDetails" rows="4" placeholder="List item constraints, sizing parameters, or delivery criteria..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-gold btn-block">Transmit Infrastructure Query</button>
-                </form>
-            </div>
-
-        </div>
-    </section>
-
-    <footer class="global-footer">
-        <p>&copy; 2026 Pawboo Pet Supply Systems. Built for High-Performance Enterprise Interactivity.</p>
-    </footer>
-
-    <div class="modal-overlay" id="successModal">
-        <div class="modal-card">
-            <div class="modal-status-icon"><i data-lucide="badge-check"></i></div>
-            <h3>Inquiry Routed Successfully</h3>
-            <p>Our backend tracking system has queued your query. Our central desk will follow up shortly via email.</p>
-            <button class="btn btn-primary" id="closeModalBtn">Acknowledge</button>
-        </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Pawboo Pet Hypermarket offers premium pet food, accessories, grooming, delivery, and booking support for dogs, cats, birds, fish, and small pets."
+    />
+    <meta name="theme-color" content="#101114" />
+    <meta property="og:title" content="Pawboo Pet Hypermarket" />
+    <meta property="og:description" content="Premium pet shopping, grooming, and care booking in one fast single-page website." />
+    <meta property="og:type" content="website" />
+    <title>Pawboo Pet Hypermarket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="announcement">
+      <span>Same-day delivery in selected areas</span>
+      <a href="#inquiries" data-route="inquiries">Book grooming or ask for product availability</a>
     </div>
 
-    <script>
-        window.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Pawboo home">
+        <span class="brand-mark">P</span>
+        <span>
+          <strong>Pawboo</strong>
+          <small>Pet Hypermarket</small>
+        </span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">Menu</button>
+
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#shop" data-route="shop">Shop</a>
+        <a href="#grooming" data-route="grooming">Grooming</a>
+        <a href="#reviews" data-route="reviews">Reviews</a>
+        <a href="#location" data-route="location">Location</a>
+        <a href="#faq" data-route="faq">FAQ</a>
+        <a href="#inquiries" data-route="inquiries">Inquiries</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="owner-button" id="ownerLoginOpen" type="button">Login</button>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Change theme">T</button>
+        <button class="cart-button" id="cartOpen" type="button">
+          Cart <span id="cartCount">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-media" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Food. Grooming. Accessories. Care.</p>
+          <h1>Pawboo Pet Hypermarket</h1>
+          <p class="hero-copy">
+            A premium one-stop pet store experience with curated products, salon-grade grooming, fast local support,
+            and instant inquiry paths for every pet parent.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#shop" data-route="shop">Shop Products</a>
+            <a class="btn ghost" href="#grooming" data-route="grooming">Book Grooming</a>
+          </div>
+          <div class="hero-stats" aria-label="Store highlights">
+            <span><strong>34</strong> Live Products</span>
+            <span><strong>4.9</strong> Customer Rating</span>
+            <span><strong>7 Days</strong> Open</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section service-strip" aria-label="Quick services">
+        <article>
+          <span>01</span>
+          <h2>Click & Collect</h2>
+          <p>Reserve pet food, toys, supplements, and accessories before visiting.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Grooming Studio</h2>
+          <p>Bath, blow dry, nail care, trimming, spa packages, and puppy grooming.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Nutrition Help</h2>
+          <p>Ask for breed, age, allergy, and budget-based recommendations.</p>
+        </article>
+      </section>
+
+      <section class="section shop-section" id="shop">
+        <div class="section-heading">
+          <p class="eyebrow">Editable Catalog</p>
+          <h2>Shop Hypermarket</h2>
+          <p>Real Pawboo product photos are loaded from your image folder. Product names and prices are based on the image filenames.</p>
+        </div>
+
+        <div class="shop-tools">
+          <label class="search-box">
+            <span>Search</span>
+            <input id="productSearch" type="search" placeholder="Food, toy, grooming..." autocomplete="off" />
+          </label>
+          <div class="filter-tabs" role="tablist" aria-label="Product categories">
+            <button class="active" type="button" data-filter="all">All</button>
+            <button type="button" data-filter="food">Food</button>
+            <button type="button" data-filter="treats">Treats</button>
+            <button type="button" data-filter="grooming">Grooming</button>
+            <button type="button" data-filter="accessory">Accessories</button>
+            <button type="button" data-filter="toy">Toys</button>
+            <button type="button" data-filter="bird">Bird</button>
+          </div>
+          <button class="btn compact" id="resetCatalog" type="button">Reset Catalog</button>
+        </div>
+
+        <div class="product-grid" id="productGrid" aria-live="polite"></div>
+      </section>
+
+      <section class="section grooming-section" id="grooming">
+        <div class="section-heading">
+          <p class="eyebrow">Salon Services</p>
+          <h2>Grooming Studio</h2>
+          <p>Premium grooming packages for dogs and cats, with quick booking and WhatsApp confirmation.</p>
+        </div>
+
+        <div class="grooming-layout">
+          <div class="grooming-image" aria-label="Professional pet grooming studio"></div>
+          <div class="package-list" id="packageList"></div>
+        </div>
+      </section>
+
+      <section class="section reviews-section" id="reviews">
+        <div class="section-heading">
+          <p class="eyebrow">Customer Love</p>
+          <h2>Reviews</h2>
+          <p>Real pet parents trust Pawboo for gentle grooming, helpful care, and a clean, welcoming studio experience.</p>
+        </div>
+        <div class="google-rating">
+          <div>
+            <span class="rating-stars">5 stars</span>
+            <strong>4.9 on Google</strong>
+          </div>
+          <p>Based on 70 customer reviews</p>
+          <a class="btn compact" href="https://www.google.com/search?q=Pawboo+Pets+reviews" target="_blank" rel="noreferrer">View Google Reviews</a>
+        </div>
+        <div class="review-masonry" id="reviewGrid"></div>
+      </section>
+
+      <section class="section location-section" id="location">
+        <div class="section-heading">
+          <p class="eyebrow">Find Us</p>
+          <h2>Pawboo on Google Maps</h2>
+          <p>Use the embedded map for quick directions, or open the location in Google Maps before visiting.</p>
+        </div>
+
+        <div class="location-layout">
+          <div class="map-shell">
+            <iframe
+              title="Pawboo Pets Google Maps location"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Pawboo%20Pets&output=embed">
+            </iframe>
+          </div>
+
+          <aside class="visit-card">
+            <span class="badge">Google Maps</span>
+            <h3>Pawboo Pets</h3>
+            <p>Search-ready map embed for Pawboo Pets. Replace the query with your exact Google Business Profile address if needed.</p>
+            <div class="visit-list">
+              <span>Open daily: 9:00 AM - 9:30 PM</span>
+              <span>Products, grooming, food, accessories</span>
+              <span>Call or WhatsApp before visiting for stock checks</span>
+            </div>
+            <a class="btn primary" id="mapLink" href="https://www.google.com/maps/search/?api=1&query=Pawboo%20Pets" target="_blank" rel="noreferrer">Open Google Maps</a>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section faq-section" id="faq">
+        <div class="section-heading">
+          <p class="eyebrow">Questions</p>
+          <h2>FAQ</h2>
+          <p>Ask product, grooming, delivery, or care questions. Replies appear here when the team answers.</p>
+        </div>
+        <div class="login-status" id="loginStatus">
+          <span>You can browse without logging in.</span>
+          <button class="btn compact" id="faqOwnerLogin" type="button">Login</button>
+        </div>
+        <form class="faq-form" id="faqForm">
+          <input id="faqInput" type="text" placeholder="Ask about delivery, grooming, food brands..." required />
+          <button class="btn primary" type="submit">Ask Question</button>
+        </form>
+        <div class="faq-list" id="faqList"></div>
+      </section>
+
+      <section class="section inquiry-section" id="inquiries">
+        <div class="section-heading">
+          <p class="eyebrow">Contact Hub</p>
+          <h2>Inquiries & Booking</h2>
+          <p>Send a product request, grooming booking, bulk order, or partnership inquiry.</p>
+        </div>
+
+        <div class="inquiry-grid">
+          <form class="inquiry-form" id="inquiryForm">
+            <div class="form-row">
+              <label>Name<input name="name" type="text" required /></label>
+              <label>Phone<input name="phone" type="tel" required /></label>
+            </div>
+            <div class="form-row">
+              <label>Pet Type
+                <select name="pet">
+                  <option>Dog</option>
+                  <option>Cat</option>
+                  <option>Bird</option>
+                  <option>Fish</option>
+                  <option>Small Pet</option>
+                </select>
+              </label>
+              <label>Need
+                <select name="need">
+                  <option>Product Availability</option>
+                  <option>Grooming Booking</option>
+                  <option>Home Delivery</option>
+                  <option>Nutrition Advice</option>
+                  <option>Bulk Order</option>
+                </select>
+              </label>
+            </div>
+            <label>Message<textarea name="message" rows="5" placeholder="Tell us what you need..." required></textarea></label>
+            <button class="btn primary" type="submit">Submit Inquiry</button>
+          </form>
+
+          <aside class="contact-panel">
+            <h3>Visit Pawboo</h3>
+            <p>Pawboo Pets, Kerala, India</p>
+            <p>Open daily: 9:00 AM - 9:30 PM</p>
+            <a class="btn ghost" href="#location" data-route="location">View Map</a>
+            <a class="btn whatsapp" id="whatsappQuick" href="#" target="_blank" rel="noreferrer">WhatsApp Now</a>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+      <div class="cart-panel">
+        <div class="cart-head">
+          <h2>Your Cart</h2>
+          <button class="icon-btn" id="cartClose" type="button" aria-label="Close cart">x</button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-total">
+          <span>Total</span>
+          <strong id="cartTotal">Rs 0</strong>
+        </div>
+        <button class="btn primary full" id="checkoutBtn" type="button">Checkout on WhatsApp</button>
+      </div>
+    </aside>
+
+    <div class="modal" id="successModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <button class="icon-btn modal-close" id="modalClose" type="button" aria-label="Close modal">x</button>
+        <p class="eyebrow">Request Received</p>
+        <h2 id="modalTitle">Thank you</h2>
+        <p id="modalMessage">Our team will contact you shortly.</p>
+        <button class="btn primary" id="modalOk" type="button">Close</button>
+      </div>
+    </div>
+
+    <div class="modal" id="ownerModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <form class="modal-card login-card" id="ownerLoginForm">
+        <button class="icon-btn modal-close" id="ownerModalClose" type="button" aria-label="Close login">x</button>
+        <p class="eyebrow">Account</p>
+        <h2>Login</h2>
+        <p>Enter your email to personalize this browsing session.</p>
+        <label class="login-field">
+          Email
+          <input id="ownerEmailInput" type="email" placeholder="you@example.com" required />
+        </label>
+        <button class="btn primary full" type="submit">Continue</button>
+        <button class="btn ghost full hidden" id="ownerLogout" type="button">Logout</button>
+      </form>
+    </div>
+
+    <div class="modal" id="productModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card product-detail-card">
+        <button class="icon-btn modal-close" id="productModalClose" type="button" aria-label="Close product details">x</button>
+        <div class="product-detail">
+          <figure><img id="detailImage" src="" alt="" /></figure>
+          <div class="product-detail-copy">
+            <span class="badge" id="detailBadge">Product</span>
+            <h2 id="detailName">Product Name</h2>
+            <strong class="detail-price" id="detailPrice">Rs 0</strong>
+            <p id="detailDescription">Product description.</p>
+            <dl class="detail-list">
+              <div><dt>Category</dt><dd id="detailCategory">Food</dd></div>
+              <div><dt>Availability</dt><dd id="detailStock">In Store</dd></div>
+              <div><dt>Store Support</dt><dd>Ask Pawboo for size, variant, and delivery availability.</dd></div>
+            </dl>
+            <div class="detail-actions">
+              <button class="btn primary" id="detailAddCart" type="button">Add to Cart</button>
+              <button class="btn whatsapp" id="detailWhatsapp" type="button">Ask on WhatsApp</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "PetStore",
+        "name": "Pawboo Pet Hypermarket",
+        "address": "Kerala, India",
+        "telephone": "+91 90000 00000",
+        "openingHours": "Mo-Su 09:00-21:30",
+        "areaServed": "Kerala",
+        "sameAs": ["https://wa.me/919000000000"]
+      }
     </script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

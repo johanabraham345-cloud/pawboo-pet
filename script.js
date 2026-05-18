@@ -1,738 +1,551 @@
-:root {
-  --bg: #101114;
-  --panel: #181a1f;
-  --panel-2: #20232a;
-  --text: #f8f5ee;
-  --muted: #a6adb8;
-  --line: rgba(255, 255, 255, 0.12);
-  --gold: #d8b35a;
-  --mint: #63d6b3;
-  --coral: #ff7f6e;
-  --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
+const STORE_PHONE = "919000000000";
+const MAP_QUERY = "Pawboo Pets";
+const OWNER_EMAIL = "johanabraham345@gmail.com";
+const STORAGE_KEYS = {
+  products: "pawbooProductsV2",
+  cart: "pawbooCartV2",
+  faqs: "pawbooFaqsV2",
+  theme: "pawbooTheme",
+  ownerEmail: "pawbooOwnerEmail"
+};
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-}
-body.light {
-  --bg: #f8f6f0;
-  --panel: #ffffff;
-  --panel-2: #ede9df;
-  --text: #171717;
-  --muted: #5e6673;
-  --line: rgba(0, 0, 0, 0.12);
-  --shadow: 0 18px 60px rgba(20, 25, 35, 0.12);
-}
-a { color: inherit; text-decoration: none; }
-button, input, textarea, select { font: inherit; }
-img { max-width: 100%; display: block; }
+const defaultProducts = [
+  product("bio-froom-fluffy-puppu-tear-free-1500", "Bio Froom Fluffy Puppu Tear Free", "grooming", 1500, "assets/products/bio-froom-fluffy-puppu-tear-free-1500.webp", "Shampoo"),
+  product("bio-groom-facial-cleanser-1500", "Bio Groom Facial Cleanser", "grooming", 1500, "assets/products/bio-groom-facial-cleanser-1500.webp", "Face Care"),
+  product("bio-groom-gentle-hypo-1400", "Bio Groom Gentle Hypo", "grooming", 1400, "assets/products/bio-groom-gentle-hypo-1400.webp", "Sensitive Skin"),
+  product("bio-groom-natural-oatmeal-1300", "Bio Groom Natural Oatmeal", "grooming", 1300, "assets/products/bio-groom-natural-oatmeal-1300.webp", "Coat Care"),
+  product("bio-groom-waterless-bath-1200", "Bio Groom Waterless Bath", "grooming", 1200, "assets/products/bio-groom-waterless-bath-1200.webp", "No-Rinse"),
+  product("black-tuxedo-bandana-320", "Black Tuxedo Bandana", "accessory", 320, "assets/products/black-tuxedo-bandana-320.webp", "Style"),
+  product("chicken-in-jelly-599", "Chicken in Jelly", "food", 599, "assets/products/chicken-in-jelly-599.webp", "Cat Food"),
+  product("chicken-in-tuna-799", "Chicken in Tuna", "food", 799, "assets/products/chicken-in-tuna-799.webp", "Cat Food"),
+  product("chip-chops-chicken-strips-660", "Chip Chops Chicken Strips", "treats", 660, "assets/products/chip-chops-chicken-strips-660.webp", "Dog Treat"),
+  product("chip-chops-chicken-tenders-660", "Chip Chops Chicken Tenders", "treats", 660, "assets/products/chip-chops-chicken-tenders-660.webp", "Dog Treat"),
+  product("chip-chops-dried-chicken-jerky-660", "Chip Chops Dried Chicken Jerky", "treats", 660, "assets/products/chip-chops-dried-chicken-jerky-660.webp", "Dog Treat"),
+  product("chip-chops-fish-on-stick", "Chip Chops Fish on Stick", "treats", null, "assets/products/chip-chops-fish-on-stick.jpg", "Ask Price"),
+  product("dog-bow-tuxedo-290", "Dog Bow Tuxedo", "accessory", 290, "assets/products/dog-bow-tuxedo-290.jpg", "Style"),
+  product("dog-o-bow-floral-dog-shirt-1199", "Dog-O-Bow Floral Dog Shirt", "accessory", 1199, "assets/products/dog-o-bow-floral-dog-shirt-1199.jpg", "Apparel"),
+  product("flexi-new-neon-retractable-leash", "Flexi New Neon Retractable Leash", "accessory", null, "assets/products/flexi-new-neon-retractable-leash.jpg", "Ask Price"),
+  product("fofo-plush-toys-350", "Fofo Plush Toys", "toy", 350, "assets/products/fofo-plush-toys-350.webp", "Toy"),
+  product("gravy-chunks-roasted-duck-chicken-liver-90", "Gravy Chunks Roasted Duck, Chicken and Liver", "food", 90, "assets/products/gravy-chunks-roasted-duck-chicken-liver-90.webp", "Wet Food"),
+  product("jibss-kennel-hygiene-floor-cleaner-440", "Jibss Kennel Hygiene Floor Cleaner", "grooming", 440, "assets/products/jibss-kennel-hygiene-floor-cleaner-440-different-colour-variants.webp", "Variants"),
+  product("lamb-with-chicken-799", "Lamb with Chicken", "food", 799, "assets/products/lamb-with-chicken-799.webp", "Cat Food"),
+  product("lozalo-privilege-shampoo", "Lozalo Privilege Shampoo", "grooming", null, "assets/products/lozalo-privilege-shampoo.jpg", "Ask Price"),
+  product("me-o-cat-food-dry-ocean-fish-880", "Me-O Cat Food Dry Ocean Fish", "food", 880, "assets/products/me-o-cat-food-dry-ocean-fish-880.webp", "Cat Food"),
+  product("me-o-cat-food-dry-persian-cat-550", "Me-O Cat Food Dry Persian Cat", "food", 550, "assets/products/me-o-cat-food-dry-persian-cat-550.webp", "Cat Food"),
+  product("me-o-ocean-fish-cat-dry-1100", "Me-O Ocean Fish Cat Dry", "food", 1100, "assets/products/me-o-ocean-fish-cat-dry-1100.webp", "Cat Food"),
+  product("nylon-chey-bones-250", "Nylon Chew Bones", "toy", 250, "assets/products/nylon-chey-bones-250.webp", "Chew Toy"),
+  product("parrot-vital-pellet-herbal-99", "Parrot Vital Pellet Herbal", "bird", 99, "assets/products/parrot-vital-pellet-herbal-99.webp", "Bird Food"),
+  product("persian-adult-599", "Persian Adult", "food", 599, "assets/products/persian-adult-599.webp", "Cat Food"),
+  product("persian-kitten-399", "Persian Kitten", "food", 399, "assets/products/persian-kitten-399.jpg", "Kitten Food"),
+  product("purina-felix-friskies-dry-350", "Purina Felix Friskies Dry", "food", 350, "assets/products/purina-felix-friskies-dry-350.webp", "Cat Food"),
+  product("purina-felix-matisse-salmon-chicken-990", "Purina Felix Matisse Salmon and Chicken", "food", 990, "assets/products/purina-felix-matisse-salmon-chicken-990.webp", "Cat Food"),
+  product("purina-felix-pouch-felix-kitten-pouches", "Purina Felix Kitten Pouches", "food", null, "assets/products/purina-felix-pouch-felix-kitten-pouches.webp", "Ask Price"),
+  product("roested-ducks-3499", "Roasted Ducks", "food", 3499, "assets/products/roested-ducks-3499.webp", "Premium Food"),
+  product("royal-blue-red-tartan-plaid-bandana-699", "Royal Blue and Red Tartan Plaid Bandana", "accessory", 699, "assets/products/royal-blue-red-tartan-plaid-bandana-699.webp", "Style"),
+  product("trixie-premium-nylon-rope-leashes-995", "Trixie Premium Nylon and Rope Leashes", "accessory", 995, "assets/products/trixie-premium-nylon-rope-leashes-995.jpg", "Leash"),
+  product("tropiclean-pet-shampoo-2-in-1", "TropiClean Pet Shampoo 2-in-1", "grooming", null, "assets/products/tropiclean-pet-shampoo-2-in-1.jpg", "Ask Price")
+];
 
-.announcement {
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  padding: 10px 18px;
-  background: #d8b35a;
-  color: #151515;
-  font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-}
-.announcement a { text-decoration: underline; }
+const packages = [
+  { name: "Essential Bath", price: 799, text: "Bath, brush, blow dry, ear cleaning, and fragrance finish." },
+  { name: "Full Groom", price: 1499, text: "Bath, haircut, nail clipping, paw trim, hygiene trim, and coat styling." },
+  { name: "Puppy Intro", price: 699, text: "Gentle first grooming session for puppies with comfort handling." },
+  { name: "Cat Care Session", price: 1299, text: "Comb-out, nail care, dry bath option, and mat control for cats." }
+];
 
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 16px clamp(18px, 4vw, 58px);
-  background: rgba(16, 17, 20, 0.82);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(18px);
-}
-body.light .site-header { background: rgba(248, 246, 240, 0.82); }
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: max-content;
-}
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--gold), var(--coral));
-  color: #121212;
-  font-weight: 900;
-}
-.brand strong, .brand small { display: block; line-height: 1.1; }
-.brand small { color: var(--muted); font-size: 12px; }
-.site-nav {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.site-nav a {
-  padding: 10px 12px;
-  border-radius: 999px;
-  color: var(--muted);
-  font-weight: 700;
-  font-size: 14px;
-}
-.site-nav a:hover, .site-nav a.active { color: var(--text); background: var(--panel-2); }
-.header-actions { display: flex; align-items: center; gap: 10px; }
-.nav-toggle { display: none; }
-.icon-btn, .cart-button, .owner-button {
-  border: 1px solid var(--line);
-  background: var(--panel);
-  color: var(--text);
-  min-height: 42px;
-  border-radius: 999px;
-  cursor: pointer;
-}
-.icon-btn { width: 42px; font-size: 18px; }
-.cart-button, .owner-button { padding: 0 16px; font-weight: 800; }
-.owner-button.active {
-  background: var(--mint);
-  border-color: transparent;
-  color: #07150e;
-}
-.cart-button span {
-  margin-left: 8px;
-  background: var(--gold);
-  color: #151515;
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-.hero {
-  position: relative;
-  min-height: 86vh;
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-  padding: 110px clamp(18px, 5vw, 72px) 64px;
-}
-.hero-media {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, rgba(16, 17, 20, 0.94), rgba(16, 17, 20, 0.66), rgba(16, 17, 20, 0.2)),
-    url("https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?auto=format&fit=crop&w=1800&q=85") center/cover;
-}
-body.light .hero-media {
-  background:
-    linear-gradient(90deg, rgba(248, 246, 240, 0.94), rgba(248, 246, 240, 0.72), rgba(248, 246, 240, 0.18)),
-    url("https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?auto=format&fit=crop&w=1800&q=85") center/cover;
-}
-.hero-content {
-  position: relative;
-  max-width: 780px;
-}
-.eyebrow {
-  margin: 0 0 10px;
-  color: var(--mint);
-  text-transform: uppercase;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0;
-}
-h1, h2, h3, p { margin-top: 0; }
-h1 {
-  margin-bottom: 16px;
-  font-size: clamp(42px, 8vw, 96px);
-  line-height: 0.95;
-  letter-spacing: 0;
-}
-.hero-copy {
-  max-width: 660px;
-  color: var(--muted);
-  font-size: 18px;
-}
-.hero-actions, .hero-stats, .shop-tools, .filter-tabs, .form-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.hero-stats {
-  margin-top: 30px;
-}
-.hero-stats span {
-  padding: 14px 18px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  color: var(--muted);
-}
-.hero-stats strong { color: var(--text); margin-right: 6px; }
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  padding: 0 20px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--text);
-  background: var(--panel);
-  font-weight: 900;
-  cursor: pointer;
-}
-.btn.primary { background: var(--gold); color: #141414; border-color: transparent; }
-.btn.ghost { background: rgba(255,255,255,0.06); }
-.btn.whatsapp { background: #1fbf75; color: #07150e; border: 0; }
-.btn.compact { min-height: 42px; padding-inline: 16px; }
-.btn.full { width: 100%; }
-
-.section {
-  padding: 86px clamp(18px, 5vw, 72px);
-}
-.section-heading {
-  max-width: 780px;
-  margin-bottom: 34px;
-}
-.section-heading h2 {
-  font-size: clamp(32px, 5vw, 58px);
-  line-height: 1;
-  margin-bottom: 12px;
-}
-.section-heading p:not(.eyebrow) { color: var(--muted); }
-
-.service-strip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--line);
-  padding: 1px;
-}
-.service-strip article {
-  padding: 36px;
-  background: var(--panel);
-}
-.service-strip span { color: var(--gold); font-weight: 900; }
-.service-strip h2 { font-size: 22px; }
-.service-strip p { color: var(--muted); margin: 0; }
-
-.shop-tools {
-  align-items: end;
-  justify-content: space-between;
-  margin-bottom: 28px;
-}
-.search-box {
-  display: grid;
-  gap: 6px;
-  min-width: min(100%, 320px);
-  color: var(--muted);
-  font-weight: 800;
-  font-size: 13px;
-}
-input, textarea, select {
-  width: 100%;
-  border: 1px solid var(--line);
-  background: var(--panel);
-  color: var(--text);
-  border-radius: 8px;
-  padding: 13px 14px;
-  outline: none;
-}
-input:focus, textarea:focus, select:focus { border-color: var(--gold); }
-.filter-tabs button {
-  border: 1px solid var(--line);
-  background: var(--panel);
-  color: var(--muted);
-  border-radius: 999px;
-  padding: 11px 15px;
-  font-weight: 900;
-  cursor: pointer;
-}
-.filter-tabs button.active { background: var(--mint); color: #07150e; border-color: transparent; }
-
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-}
-.product-card {
-  border: 1px solid var(--line);
-  background: var(--panel);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-.product-card:hover,
-.product-card:focus {
-  border-color: rgba(216, 179, 90, 0.7);
-  transform: translateY(-2px);
-  outline: none;
-}
-.product-card figure {
-  margin: 0;
-  aspect-ratio: 1 / 0.9;
-  background: #f8f5ee;
-  overflow: hidden;
-  padding: 16px;
-}
-.product-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transition: transform 0.3s ease;
-}
-.product-card:hover img { transform: scale(1.02); }
-.product-body { padding: 16px; }
-.badge {
-  display: inline-flex;
-  padding: 4px 9px;
-  border-radius: 999px;
-  background: rgba(99, 214, 179, 0.14);
-  color: var(--mint);
-  font-size: 12px;
-  font-weight: 900;
-}
-.product-body h3 { margin: 12px 0 6px; font-size: 17px; }
-.product-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  color: var(--muted);
-}
-.price { color: var(--gold); font-weight: 900; }
-.card-actions {
-  display: grid;
-  grid-template-columns: 1fr 44px;
-  gap: 10px;
-  margin-top: 16px;
-}
-.card-actions .icon-btn {
-  width: auto;
-  padding: 0 10px;
-  font-size: 12px;
-  font-weight: 900;
-}
-.edit-form {
-  display: grid;
-  gap: 10px;
-  margin-top: 14px;
-}
-.hidden { display: none !important; }
-
-.grooming-layout {
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 24px;
-}
-.grooming-image {
-  min-height: 520px;
-  border-radius: 8px;
-  background: url("https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1200&q=85") center/cover;
-}
-.package-list {
-  display: grid;
-  gap: 14px;
-}
-.package-card {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 16px;
-  padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--panel);
-}
-.package-card p { color: var(--muted); margin-bottom: 0; }
-.package-card strong { color: var(--gold); font-size: 22px; }
-
-.review-masonry {
-  columns: 3 260px;
-  column-gap: 18px;
-}
-.google-rating {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 28px;
-  padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background:
-    linear-gradient(90deg, rgba(216, 179, 90, 0.16), transparent),
-    var(--panel);
-}
-.google-rating div {
-  display: grid;
-  gap: 4px;
-}
-.rating-stars {
-  color: var(--gold);
-  font-size: 22px;
-  line-height: 1;
-}
-.google-rating strong {
-  font-size: 24px;
-}
-.google-rating p {
-  margin: 0;
-  color: var(--muted);
-  font-weight: 800;
-}
-.review-masonry article {
-  break-inside: avoid;
-  margin: 0 0 18px;
-  padding: 24px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--panel);
-}
-.review-masonry strong { color: var(--gold); }
-.review-masonry p { margin: 14px 0; }
-.review-masonry span { color: var(--muted); font-weight: 800; }
-.review-card {
-  min-height: 210px;
-}
-.review-head {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.review-head img {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--gold);
-  background: var(--panel-2);
-}
-.review-head strong {
-  display: block;
-  color: var(--text);
-}
-.review-head span {
-  display: block;
-  color: var(--gold);
-  font-size: 13px;
-  line-height: 1.2;
-}
-.review-card p {
-  color: var(--muted);
-  font-size: 18px;
-}
-
-.location-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
-  gap: 24px;
-  align-items: stretch;
-}
-.map-shell {
-  min-height: 520px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--panel);
-  box-shadow: var(--shadow);
-}
-.map-shell iframe {
-  width: 100%;
-  height: 100%;
-  min-height: 520px;
-  border: 0;
-  filter: grayscale(0.25) contrast(1.08);
-}
-.visit-card {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 26px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background:
-    linear-gradient(180deg, rgba(216, 179, 90, 0.12), transparent 42%),
-    var(--panel);
-}
-.visit-card h3 {
-  margin-bottom: 0;
-  font-size: 30px;
-}
-.visit-card p {
-  color: var(--muted);
-  margin-bottom: 0;
-}
-.visit-list {
-  display: grid;
-  gap: 10px;
-  color: var(--muted);
-}
-.visit-list span {
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.faq-form {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-  margin-bottom: 22px;
-}
-.faq-list {
-  display: grid;
-  gap: 10px;
-}
-.login-status {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 18px;
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--panel);
-  color: var(--muted);
-}
-.faq-item {
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--panel);
-}
-.faq-item strong { display: block; margin-bottom: 6px; }
-.faq-item p { color: var(--muted); margin: 0; }
-.faq-answer-form {
-  display: grid;
-  gap: 10px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
-}
-
-.inquiry-grid {
-  display: grid;
-  grid-template-columns: 1.3fr 0.7fr;
-  gap: 24px;
-}
-.inquiry-form, .contact-panel {
-  padding: 26px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--panel);
-}
-.inquiry-form {
-  display: grid;
-  gap: 16px;
-}
-.inquiry-form label {
-  display: grid;
-  gap: 6px;
-  flex: 1;
-  color: var(--muted);
-  font-weight: 800;
-  font-size: 13px;
-}
-.contact-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.contact-panel p { color: var(--muted); margin-bottom: 0; }
-
-.cart-drawer, .modal {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  display: none;
-  background: rgba(0, 0, 0, 0.62);
-  backdrop-filter: blur(8px);
-}
-.cart-drawer.open, .modal.open { display: block; }
-.cart-panel {
-  margin-left: auto;
-  width: min(440px, 100%);
-  min-height: 100%;
-  background: var(--panel);
-  padding: 22px;
-  box-shadow: var(--shadow);
-}
-.cart-head, .cart-row, .cart-total {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
-.cart-items {
-  display: grid;
-  gap: 12px;
-  margin: 24px 0;
-}
-.cart-row {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 12px;
-}
-.cart-row small { color: var(--muted); }
-.cart-total {
-  border-top: 1px solid var(--line);
-  padding: 18px 0;
-}
-.modal {
-  place-items: center;
-  padding: 18px;
-}
-.modal.open { display: grid; }
-.modal-card {
-  position: relative;
-  width: min(520px, 100%);
-  padding: 34px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--panel);
-  box-shadow: var(--shadow);
-}
-.modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-}
-.login-card p {
-  color: var(--muted);
-}
-.login-field {
-  display: grid;
-  gap: 8px;
-  margin: 18px 0;
-  color: var(--muted);
-  font-weight: 800;
-  font-size: 13px;
-}
-.product-detail-card {
-  width: min(1040px, 100%);
-}
-.product-detail {
-  display: grid;
-  grid-template-columns: minmax(280px, 0.95fr) minmax(300px, 1.05fr);
-  gap: 28px;
-  align-items: stretch;
-}
-.product-detail figure {
-  display: grid;
-  place-items: center;
-  margin: 0;
-  min-height: 460px;
-  padding: 24px;
-  border-radius: 8px;
-  background: #f8f5ee;
-}
-.product-detail img {
-  width: 100%;
-  height: 100%;
-  max-height: 430px;
-  object-fit: contain;
-}
-.product-detail-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-right: 22px;
-}
-.product-detail-copy h2 {
-  margin-bottom: 0;
-  font-size: clamp(28px, 4vw, 48px);
-  line-height: 1.05;
-}
-.detail-price {
-  color: var(--gold);
-  font-size: 26px;
-}
-.product-detail-copy p {
-  color: var(--muted);
-}
-.detail-list {
-  display: grid;
-  gap: 10px;
-  margin: 0;
-}
-.detail-list div {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 14px;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-}
-.detail-list dt {
-  color: var(--muted);
-  font-weight: 800;
-}
-.detail-list dd {
-  margin: 0;
-}
-.detail-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: auto;
-}
-
-@media (max-width: 980px) {
-  .site-nav {
-    position: absolute;
-    top: 74px;
-    left: 18px;
-    right: 18px;
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 12px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--panel);
+const defaultReviews = [
+  {
+    name: "Mohamed Ridhaf",
+    rating: 5,
+    text: "I had a fantastic experience at Pawboo Pet Grooming Studio! The staff are incredibly kind and clearly love what they do. They took such good care of my pet and made sure he was comfortable throughout the grooming session. He came out looking adorable, smelling fresh! The studio is clean, well-organized, and has a warm, welcoming vibe. I really appreciate their attention to detail and how gentle they were. Highly recommend Pawboo to any pet parent looking for top-notch grooming services!",
+    photo: "assets/reviews/customer-1-pfp-mohamed-ridhaf.png"
+  },
+  {
+    name: "Aleene",
+    rating: 5,
+    text: "It is safe to say my pet are extremely happy and satisfied after grooming section today at Pawboo. Thanks to the owner and groomers for an amazing experience. I always recommend this place to all the pet parents. I am waiting to come back soon with my pet for another grooming section.",
+    photo: "assets/reviews/customer-2-aleena-xavier.png"
+  },
+  {
+    name: "Treesa",
+    rating: 5,
+    text: "Took my Lhasa Apso for grooming and loved the experience! The staff were kind and friendly to my dog. They took great care and did a perfect job.",
+    photo: "assets/reviews/customer-3-treasa-stimna-cleetus.png"
   }
-  .site-nav.open { display: flex; }
-  .nav-toggle {
-    display: inline-grid;
-    place-items: center;
-    width: 42px;
-    height: 42px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--panel);
-    color: var(--text);
-  }
-  .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .service-strip, .grooming-layout, .inquiry-grid, .location-layout, .product-detail { grid-template-columns: 1fr; }
-  .grooming-image { min-height: 360px; }
-  .map-shell, .map-shell iframe { min-height: 380px; }
-  .product-detail figure { min-height: 320px; }
+];
+
+const defaultFaqs = [
+  { q: "Do you offer home delivery?", a: "Yes. Share your location and product list through WhatsApp for confirmation." },
+  { q: "Can I book grooming online?", a: "Yes. Use the grooming buttons or inquiry form and the team will confirm a slot." },
+  { q: "Can you suggest food for allergies?", a: "Yes. Mention breed, age, current food, and allergy signs in the inquiry form." }
+];
+
+let products = load(STORAGE_KEYS.products, defaultProducts);
+let cart = load(STORAGE_KEYS.cart, []);
+let faqs = load(STORAGE_KEYS.faqs, defaultFaqs);
+let currentFilter = "all";
+let loggedInEmail = localStorage.getItem(STORAGE_KEYS.ownerEmail) || "";
+let activeProductId = "";
+
+const qs = (selector) => document.querySelector(selector);
+const qsa = (selector) => [...document.querySelectorAll(selector)];
+const rupee = (value) => value === null || Number.isNaN(Number(value))
+  ? "Ask price"
+  : `Rs ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(Number(value))}`;
+
+function product(id, name, category, price, image, stock) {
+  return { id, name, category, price, image, stock };
 }
 
-@media (max-width: 620px) {
-  .announcement { flex-direction: column; gap: 2px; }
-  .site-header { padding: 12px 16px; }
-  .brand small, .header-actions .icon-btn, .owner-button { display: none; }
-  .hero { min-height: 82vh; padding-top: 90px; }
-  .section { padding: 64px 16px; }
-  .product-grid, .faq-form, .package-card { grid-template-columns: 1fr; }
-  .form-row { flex-direction: column; }
-  .login-status { align-items: stretch; flex-direction: column; }
-  .google-rating { align-items: stretch; flex-direction: column; }
-  .product-detail-card { padding: 22px; }
-  .product-detail-copy { padding-right: 0; }
-  .detail-list div { grid-template-columns: 1fr; }
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
+
+function load(key, fallback) {
+  try {
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : structuredClone(fallback);
+  } catch {
+    return structuredClone(fallback);
+  }
+}
+
+function save(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function createWhatsAppLink(message) {
+  return `https://wa.me/${STORE_PHONE}?text=${encodeURIComponent(message)}`;
+}
+
+function createMailLink(subject, body) {
+  return `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function isOwner() {
+  return loggedInEmail.trim().toLowerCase() === OWNER_EMAIL;
+}
+
+function isLoggedIn() {
+  return loggedInEmail.trim() !== "";
+}
+
+function getProductAction(product) {
+  return product.price === null ? "Ask Price" : "Add to Cart";
+}
+
+function getProductDescription(productItem) {
+  const descriptions = {
+    food: "A carefully selected Pawboo food product for daily feeding and healthy routines. Please confirm age, breed, flavor, and pack size before purchase.",
+    treats: "A tasty reward option for training, bonding, and snack time. Ask Pawboo for feeding guidance based on your pet's size and diet.",
+    grooming: "A grooming and care essential for cleaner coats, better hygiene, and salon-style maintenance at home or in-store.",
+    accessory: "A practical pet accessory chosen for comfort, style, and everyday use. Confirm size and color availability before checkout.",
+    toy: "A fun enrichment product to keep pets active, playful, and engaged through the day.",
+    bird: "A bird-care product stocked for daily nutrition and care. Confirm suitability for your bird type before purchase."
+  };
+  return descriptions[productItem.category] || "A Pawboo catalog product. Ask the team for current stock, variants, and recommendations.";
+}
+
+function renderProducts() {
+  const term = qs("#productSearch").value.trim().toLowerCase();
+  const filtered = products.filter((productItem) => {
+    const searchText = `${productItem.name} ${productItem.category} ${productItem.stock}`.toLowerCase();
+    const matchesFilter = currentFilter === "all" || productItem.category === currentFilter;
+    return matchesFilter && searchText.includes(term);
+  });
+
+  qs("#productGrid").innerHTML = filtered.map((productItem) => `
+    <article class="product-card" data-id="${escapeHtml(productItem.id)}" tabindex="0" aria-label="View ${escapeHtml(productItem.name)} details">
+      <figure><img src="${escapeHtml(productItem.image)}" alt="${escapeHtml(productItem.name)}" loading="lazy"></figure>
+      <div class="product-body">
+        <span class="badge">${escapeHtml(productItem.stock)}</span>
+        <h3>${escapeHtml(productItem.name)}</h3>
+        <div class="product-meta">
+          <span>${escapeHtml(productItem.category)}</span>
+          <span class="price">${rupee(productItem.price)}</span>
+        </div>
+        <div class="card-actions">
+          <button class="btn primary" type="button" data-add="${escapeHtml(productItem.id)}">${getProductAction(productItem)}</button>
+          <button class="icon-btn" type="button" aria-label="Edit ${escapeHtml(productItem.name)}" data-edit="${escapeHtml(productItem.id)}">Edit</button>
+        </div>
+        <form class="edit-form hidden" data-form="${escapeHtml(productItem.id)}">
+          <input name="name" value="${escapeHtml(productItem.name)}" aria-label="Product name">
+          <input name="price" type="number" min="0" value="${productItem.price ?? ""}" placeholder="Leave empty for Ask price" aria-label="Product price">
+          <input name="stock" value="${escapeHtml(productItem.stock)}" aria-label="Product stock label">
+          <input name="image" value="${escapeHtml(productItem.image)}" aria-label="Product image URL">
+          <button class="btn compact" type="submit">Save Product</button>
+        </form>
+      </div>
+    </article>
+  `).join("") || `<p class="empty">No products found. Try another search.</p>`;
+}
+
+function renderPackages() {
+  qs("#packageList").innerHTML = packages.map((item) => `
+    <article class="package-card">
+      <div>
+        <h3>${item.name}</h3>
+        <p>${item.text}</p>
+      </div>
+      <div>
+        <strong>${rupee(item.price)}</strong>
+        <button class="btn compact" type="button" data-book="${item.name}">Book</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderReviews() {
+  qs("#reviewGrid").innerHTML = defaultReviews.map((review) => `
+    <article class="review-card">
+      <div class="review-head">
+        <img src="${review.photo}" alt="${review.name}" loading="lazy">
+        <div>
+          <strong>${review.name}</strong>
+          <span>${"&#9733;".repeat(review.rating)}</span>
+        </div>
+      </div>
+      <p>${review.text}</p>
+    </article>
+  `).join("");
+}
+
+function renderFaqs() {
+  qs("#faqList").innerHTML = faqs.map((item, index) => `
+    <article class="faq-item">
+      <strong>${index + 1}. ${escapeHtml(item.q)}</strong>
+      <p>${escapeHtml(item.a)}</p>
+      <form class="faq-answer-form ${isOwner() ? "" : "hidden"}" data-faq-index="${index}">
+        <textarea name="answer" rows="3" aria-label="Reply to ${escapeHtml(item.q)}">${escapeHtml(item.a)}</textarea>
+        <button class="btn compact" type="submit">Save Answer</button>
+      </form>
+    </article>
+  `).join("");
+}
+
+function renderOwnerState() {
+  const status = qs("#loginStatus");
+  const ownerButton = qs("#ownerLoginOpen");
+  const logoutButton = qs("#ownerLogout");
+  if (!status || !ownerButton) return;
+
+  if (isOwner()) {
+    status.innerHTML = `
+      <span>Logged in as ${escapeHtml(loggedInEmail)}. FAQ reply tools are available.</span>
+      <button class="btn compact" id="faqOwnerLogout" type="button">Logout</button>
+    `;
+    ownerButton.textContent = "Account";
+    ownerButton.classList.add("active");
+    if (logoutButton) logoutButton.classList.remove("hidden");
+  } else if (isLoggedIn()) {
+    status.innerHTML = `
+      <span>Logged in as ${escapeHtml(loggedInEmail)}.</span>
+      <button class="btn compact" id="faqOwnerLogout" type="button">Logout</button>
+    `;
+    ownerButton.textContent = "Account";
+    ownerButton.classList.add("active");
+    if (logoutButton) logoutButton.classList.remove("hidden");
+  } else {
+    status.innerHTML = `
+      <span>You can browse, ask questions, and send inquiries without logging in.</span>
+      <button class="btn compact" id="faqOwnerLogin" type="button">Login</button>
+    `;
+    ownerButton.textContent = "Login";
+    ownerButton.classList.remove("active");
+    if (logoutButton) logoutButton.classList.add("hidden");
+  }
+}
+
+function renderCart() {
+  qs("#cartCount").textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+  qs("#cartItems").innerHTML = cart.length ? cart.map((item) => `
+    <div class="cart-row">
+      <div>
+        <strong>${escapeHtml(item.name)}</strong>
+        <small>${rupee(item.price)} x ${item.qty}</small>
+      </div>
+      <button class="icon-btn" type="button" aria-label="Remove ${escapeHtml(item.name)}" data-remove="${escapeHtml(item.id)}">x</button>
+    </div>
+  `).join("") : `<p>Your cart is empty.</p>`;
+  qs("#cartTotal").textContent = rupee(cart.reduce((sum, item) => sum + item.price * item.qty, 0));
+  save(STORAGE_KEYS.cart, cart);
+}
+
+function addToCart(id) {
+  const productItem = products.find((item) => item.id === id);
+  if (!productItem) return;
+  if (productItem.price === null) {
+    window.open(createWhatsAppLink(`Hi Pawboo, please share the price and availability for ${productItem.name}.`), "_blank");
+    return;
+  }
+  const existing = cart.find((item) => item.id === id);
+  if (existing) existing.qty += 1;
+  else cart.push({ id: productItem.id, name: productItem.name, price: productItem.price, qty: 1 });
+  renderCart();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter((item) => item.id !== id);
+  renderCart();
+}
+
+function showModal(title, message) {
+  qs("#modalTitle").textContent = title;
+  qs("#modalMessage").textContent = message;
+  qs("#successModal").classList.add("open");
+  qs("#successModal").setAttribute("aria-hidden", "false");
+}
+
+function closeModal() {
+  qs("#successModal").classList.remove("open");
+  qs("#successModal").setAttribute("aria-hidden", "true");
+}
+
+function openProductModal(id) {
+  const productItem = products.find((item) => item.id === id);
+  if (!productItem) return;
+  activeProductId = id;
+  qs("#detailImage").src = productItem.image;
+  qs("#detailImage").alt = productItem.name;
+  qs("#detailBadge").textContent = productItem.stock;
+  qs("#detailName").textContent = productItem.name;
+  qs("#detailPrice").textContent = rupee(productItem.price);
+  qs("#detailDescription").textContent = getProductDescription(productItem);
+  qs("#detailCategory").textContent = productItem.category;
+  qs("#detailStock").textContent = productItem.stock;
+  qs("#detailAddCart").textContent = getProductAction(productItem);
+  qs("#productModal").classList.add("open");
+  qs("#productModal").setAttribute("aria-hidden", "false");
+}
+
+function closeProductModal() {
+  qs("#productModal").classList.remove("open");
+  qs("#productModal").setAttribute("aria-hidden", "true");
+}
+
+function openOwnerModal() {
+  qs("#ownerEmailInput").value = loggedInEmail;
+  qs("#ownerModal").classList.add("open");
+  qs("#ownerModal").setAttribute("aria-hidden", "false");
+}
+
+function closeOwnerModal() {
+  qs("#ownerModal").classList.remove("open");
+  qs("#ownerModal").setAttribute("aria-hidden", "true");
+}
+
+function ownerLogout() {
+  loggedInEmail = "";
+  localStorage.removeItem(STORAGE_KEYS.ownerEmail);
+  renderOwnerState();
+  renderFaqs();
+  closeOwnerModal();
+}
+
+function syncRoute() {
+  const hash = location.hash || "#home";
+  qsa(".site-nav a").forEach((link) => link.classList.toggle("active", link.getAttribute("href") === hash));
+  if (hash === "#booking") location.hash = "#grooming";
+  if (hash === "#maps") location.hash = "#location";
+}
+
+function initEvents() {
+  qs(".nav-toggle").addEventListener("click", (event) => {
+    const open = qs(".site-nav").classList.toggle("open");
+    event.currentTarget.setAttribute("aria-expanded", String(open));
+  });
+
+  qsa("[data-route]").forEach((link) => {
+    link.addEventListener("click", () => qs(".site-nav").classList.remove("open"));
+  });
+
+  qs("#themeToggle").addEventListener("click", () => {
+    document.body.classList.toggle("light");
+    localStorage.setItem(STORAGE_KEYS.theme, document.body.classList.contains("light") ? "light" : "dark");
+  });
+
+  qs("#productSearch").addEventListener("input", renderProducts);
+
+  qsa("[data-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      currentFilter = button.dataset.filter;
+      qsa("[data-filter]").forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+      renderProducts();
+    });
+  });
+
+  qs("#productGrid").addEventListener("click", (event) => {
+    const addButton = event.target.closest("[data-add]");
+    const editButton = event.target.closest("[data-edit]");
+    const card = event.target.closest(".product-card");
+    if (addButton) {
+      addToCart(addButton.dataset.add);
+      return;
+    }
+    if (editButton) {
+      qs(`[data-form="${editButton.dataset.edit}"]`).classList.toggle("hidden");
+      return;
+    }
+    if (card && !event.target.closest("form, input, textarea, select")) openProductModal(card.dataset.id);
+  });
+
+  qs("#productGrid").addEventListener("keydown", (event) => {
+    const card = event.target.closest(".product-card");
+    if (!card || !["Enter", " "].includes(event.key)) return;
+    event.preventDefault();
+    openProductModal(card.dataset.id);
+  });
+
+  qs("#productGrid").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const id = form.dataset.form;
+    const formData = new FormData(form);
+    const priceValue = formData.get("price").trim();
+    products = products.map((productItem) => productItem.id === id ? {
+      ...productItem,
+      name: formData.get("name").trim(),
+      price: priceValue === "" ? null : Number(priceValue),
+      stock: formData.get("stock").trim(),
+      image: formData.get("image").trim()
+    } : productItem);
+    save(STORAGE_KEYS.products, products);
+    renderProducts();
+    showModal("Product Updated", "Your catalog change has been saved in this browser.");
+  });
+
+  qs("#resetCatalog").addEventListener("click", () => {
+    products = structuredClone(defaultProducts);
+    save(STORAGE_KEYS.products, products);
+    renderProducts();
+  });
+
+  qs("#packageList").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-book]");
+    if (!button) return;
+    window.open(createWhatsAppLink(`Hi Pawboo, I want to book the ${button.dataset.book} grooming package.`), "_blank");
+  });
+
+  qs("#faqForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const input = qs("#faqInput");
+    const question = input.value.trim();
+    faqs.unshift({ q: question, a: "Thanks for asking. Pawboo team will answer this shortly." });
+    save(STORAGE_KEYS.faqs, faqs);
+    input.value = "";
+    renderFaqs();
+    window.location.href = createMailLink("New Pawboo FAQ Question", `A customer asked:\n\n${question}\n\nThe team can reply from the Pawboo website.`);
+    showModal("Question Sent", `Your question has been prepared as an email to ${OWNER_EMAIL}.`);
+  });
+
+  qs("#faqList").addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!isOwner()) return;
+    const form = event.target;
+    const index = Number(form.dataset.faqIndex);
+    const answer = new FormData(form).get("answer").trim();
+    if (!faqs[index]) return;
+    faqs[index].a = answer;
+    save(STORAGE_KEYS.faqs, faqs);
+    renderFaqs();
+    showModal("Answer Saved", "The FAQ answer has been updated on this browser.");
+  });
+
+  qs("#inquiryForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target).entries());
+    const message = `Pawboo inquiry\n\nName: ${data.name}\nPhone: ${data.phone}\nPet: ${data.pet}\nNeed: ${data.need}\nMessage: ${data.message}`;
+    qs("#whatsappQuick").href = createWhatsAppLink(message);
+    window.location.href = createMailLink(`Pawboo Inquiry - ${data.need}`, message);
+    showModal("Inquiry Email Opened", `Your inquiry has been addressed to ${OWNER_EMAIL}. You can also continue on WhatsApp.`);
+    event.target.reset();
+  });
+
+  qs("#cartOpen").addEventListener("click", () => {
+    qs("#cartDrawer").classList.add("open");
+    qs("#cartDrawer").setAttribute("aria-hidden", "false");
+  });
+
+  qs("#cartClose").addEventListener("click", () => {
+    qs("#cartDrawer").classList.remove("open");
+    qs("#cartDrawer").setAttribute("aria-hidden", "true");
+  });
+
+  qs("#cartItems").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-remove]");
+    if (button) removeFromCart(button.dataset.remove);
+  });
+
+  qs("#checkoutBtn").addEventListener("click", () => {
+    if (!cart.length) {
+      showModal("Cart Empty", "Add products before checkout.");
+      return;
+    }
+    const lines = cart.map((item) => `${item.name} x ${item.qty} - ${rupee(item.price * item.qty)}`).join("\n");
+    window.open(createWhatsAppLink(`Hi Pawboo, I want to order:\n${lines}\nTotal: ${qs("#cartTotal").textContent}`), "_blank");
+  });
+
+  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAP_QUERY)}`;
+  const mapLink = qs("#mapLink");
+  if (mapLink) mapLink.href = mapUrl;
+  qs("#whatsappQuick").href = createWhatsAppLink("Hi Pawboo, I need help with products or grooming.");
+  qs("#ownerLoginOpen").addEventListener("click", openOwnerModal);
+  qs("#ownerModalClose").addEventListener("click", closeOwnerModal);
+  qs("#ownerLoginForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const submittedEmail = qs("#ownerEmailInput").value.trim().toLowerCase();
+    loggedInEmail = submittedEmail;
+    localStorage.setItem(STORAGE_KEYS.ownerEmail, loggedInEmail);
+    renderOwnerState();
+    renderFaqs();
+    closeOwnerModal();
+    showModal("Logged In", isOwner() ? "FAQ reply tools are now available." : "You are now logged in for this browsing session.");
+  });
+  qs("#ownerLogout").addEventListener("click", ownerLogout);
+  qs("#loginStatus").addEventListener("click", (event) => {
+    if (event.target.id === "faqOwnerLogin") openOwnerModal();
+    if (event.target.id === "faqOwnerLogout") ownerLogout();
+  });
+  qs("#modalClose").addEventListener("click", closeModal);
+  qs("#modalOk").addEventListener("click", closeModal);
+  qs("#successModal").addEventListener("click", (event) => {
+    if (event.target.id === "successModal") closeModal();
+  });
+  qs("#ownerModal").addEventListener("click", (event) => {
+    if (event.target.id === "ownerModal") closeOwnerModal();
+  });
+  qs("#productModalClose").addEventListener("click", closeProductModal);
+  qs("#productModal").addEventListener("click", (event) => {
+    if (event.target.id === "productModal") closeProductModal();
+  });
+  qs("#detailAddCart").addEventListener("click", () => {
+    addToCart(activeProductId);
+    closeProductModal();
+  });
+  qs("#detailWhatsapp").addEventListener("click", () => {
+    const productItem = products.find((item) => item.id === activeProductId);
+    if (!productItem) return;
+    window.open(createWhatsAppLink(`Hi Pawboo, I want details for ${productItem.name}. Price: ${rupee(productItem.price)}.`), "_blank");
+  });
+  window.addEventListener("hashchange", syncRoute);
+}
+
+function init() {
+  if (localStorage.getItem(STORAGE_KEYS.theme) === "light") document.body.classList.add("light");
+  renderProducts();
+  renderPackages();
+  renderReviews();
+  renderOwnerState();
+  renderFaqs();
+  renderCart();
+  initEvents();
+  syncRoute();
+}
+
+init();

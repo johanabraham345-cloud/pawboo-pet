@@ -1,235 +1,738 @@
-/**
- * Pawboo supply Inventory State Controller
- * Orchestrates local state parameters, real-time filters, and interactive interfaces.
- */
-
-const defaultProducts = [
-    {
-        id: "supply-1",
-        name: "Premium Salmon Kibble Formula",
-        category: "foods",
-        price: "₹XXX",
-        image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc109?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: "supply-2",
-        name: "Ergonomic Control Tactical Harness",
-        category: "care",
-        price: "₹XXX",
-        image: "https://images.unsplash.com/photo-1544567708-827a79119a78?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        id: "supply-3",
-        name: "Enzymatic Odor & Stain Eliminator",
-        category: "cleaning",
-        price: "₹XXX",
-        image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80"
-    }
-];
-
-const defaultReviews = [
-    { stars: 5, text: "Switched from generic local shops to Pawboo's tactical harness supplies. The hardware construction is elite. Unmatched UI tracking flow on their store dashboard.", author: "Devanand K." },
-    { stars: 5, text: "Their enzymatic cleaning solutions cleared out heavy cage odors instantly. Safe formulation components, clear labels, and immediate booking validation responses.", author: "Meera Nair" },
-    { stars: 5, text: "Cleanest supply acquisition experience. Excellent high-density selection of veterinary supplements and clinical diets.", author: "Gautham S." }
-];
-
-const defaultFAQs = [
-    { question: "Are the sanitation formulas safe around high-sensitivity felines?", answer: "Yes, all sanitation solutions are certified free of toxic phenols and ammonia variants." },
-    { question: "Can we request custom bulk imports of specific clinical food sizes?", answer: "Certainly. Open an infrastructure query at the direct desk with details to initialize tracking." }
-];
-
-// App Core Local Storage Initialization
-let currentProducts = JSON.parse(localStorage.getItem('pawboo_supply_data')) || defaultProducts;
-let currentFAQs = JSON.parse(localStorage.getItem('pawboo_supply_faqs')) || defaultFAQs;
-let activeCategoryFilter = "all";
-let adminModeActive = false;
-
-// DOM Selectors
-const productGrid = document.getElementById('productGrid');
-const reviewsContainer = document.getElementById('reviewsContainer');
-const faqList = document.getElementById('faqList');
-const adminToggleBtn = document.getElementById('adminToggleBtn');
-const filterBtns = document.querySelectorAll('.filter-btn');
-const faqForm = document.getElementById('faqForm');
-const faqInput = document.getElementById('faqInput');
-const enterpriseInquiryForm = document.getElementById('enterpriseInquiryForm');
-const successModal = document.getElementById('successModal');
-const closeModalBtn = document.getElementById('closeModalBtn');
-
-/**
- * Parses current state context array properties and builds elements inside the product catalog grid.
- */
-function renderCatalog() {
-    productGrid.innerHTML = '';
-    
-    // Filter logic pipeline
-    const itemsToRender = activeCategoryFilter === 'all' 
-        ? currentProducts 
-        : currentProducts.filter(p => p.category === activeCategoryFilter);
-
-    if(itemsToRender.length === 0) {
-        productGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 4rem 0;">No active stock items listed under this structural profile. Toggle Control Panel to inject values.</div>`;
-        return;
-    }
-
-    itemsToRender.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.setAttribute('data-id', product.id);
-
-        if (product.isEditing) {
-            card.innerHTML = `
-                <div class="edit-fields-container">
-                    <label>Supply Name</label>
-                    <input type="text" class="edit-input edit-name" value="${product.name}">
-                    
-                    <label>Supply Category</label>
-                    <select class="edit-input edit-category">
-                        <option value="foods" ${product.category === 'foods' ? 'selected' : ''}>Premium Foods</option>
-                        <option value="care" ${product.category === 'care' ? 'selected' : ''}>Animal Care & Tools</option>
-                        <option value="cleaning" ${product.category === 'cleaning' ? 'selected' : ''}>Cleaning Products</option>
-                    </select>
-
-                    <label>Price Value Metric</label>
-                    <input type="text" class="edit-input edit-price" value="${product.price}">
-                    
-                    <label>Image Resource Path URL</label>
-                    <input type="text" class="edit-input edit-image" value="${product.image}">
-                    
-                    <button class="btn btn-gold save-card-btn" style="margin-top:0.5rem; padding:0.5rem; justify-content:center;">
-                        <i data-lucide="check" style="width:16px;"></i> Commit Changes
-                    </button>
-                </div>
-            `;
-        } else {
-            const readableCategory = product.category === 'foods' ? 'Premium Foods' : product.category === 'care' ? 'Care & Tools' : 'Cleaning Product';
-            card.innerHTML = `
-                <div class="card-admin-action">
-                    <button class="btn-icon-only edit-card-btn" title="Modify State Data">
-                        <i data-lucide="edit-3" style="width:16px; height:16px;"></i>
-                    </button>
-                </div>
-                <div>
-                    <div class="product-img-wrapper">
-                        <img src="${product.image || 'https://images.unsplash.com/photo-1535268647977-a403b69fc756?auto=format&fit=crop&w=600&q=80'}" alt="${product.name}" loading="lazy">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category-tag">${readableCategory}</span>
-                        <h3 class="product-name">${product.name}</h3>
-                        <div class="product-price">${product.price}</div>
-                    </div>
-                </div>
-                <button class="btn btn-secondary" onclick="routeProcurementQuery('${product.name}')" style="justify-content:center; width:100%;">
-                    Procure Resource <i data-lucide="arrow-up-right" style="width:14px;"></i>
-                </button>
-            `;
-        }
-        productGrid.appendChild(card);
-    });
-    lucide.createIcons();
+:root {
+  --bg: #101114;
+  --panel: #181a1f;
+  --panel-2: #20232a;
+  --text: #f8f5ee;
+  --muted: #a6adb8;
+  --line: rgba(255, 255, 255, 0.12);
+  --gold: #d8b35a;
+  --mint: #63d6b3;
+  --coral: #ff7f6e;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/**
- * Routes context details to fields down inside the central engagement desk.
- */
-function routeProcurementQuery(itemName) {
-    document.getElementById('inquiries').scrollIntoView({ behavior: 'smooth' });
-    const detailsField = document.getElementById('inquiryDetails');
-    if (detailsField) {
-        detailsField.value = `Procurement Request Routing Matrix:\nInitializing tracking validation protocol parameters for specified item identity: "${itemName}".\nVerify availability timelines immediately.`;
-        detailsField.focus();
-    }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+body.light {
+  --bg: #f8f6f0;
+  --panel: #ffffff;
+  --panel-2: #ede9df;
+  --text: #171717;
+  --muted: #5e6673;
+  --line: rgba(0, 0, 0, 0.12);
+  --shadow: 0 18px 60px rgba(20, 25, 35, 0.12);
+}
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; }
+img { max-width: 100%; display: block; }
+
+.announcement {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  padding: 10px 18px;
+  background: #d8b35a;
+  color: #151515;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+.announcement a { text-decoration: underline; }
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px clamp(18px, 4vw, 58px);
+  background: rgba(16, 17, 20, 0.82);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(18px);
+}
+body.light .site-header { background: rgba(248, 246, 240, 0.82); }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: max-content;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--coral));
+  color: #121212;
+  font-weight: 900;
+}
+.brand strong, .brand small { display: block; line-height: 1.1; }
+.brand small { color: var(--muted); font-size: 12px; }
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.site-nav a {
+  padding: 10px 12px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 14px;
+}
+.site-nav a:hover, .site-nav a.active { color: var(--text); background: var(--panel-2); }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.nav-toggle { display: none; }
+.icon-btn, .cart-button, .owner-button {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  min-height: 42px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.icon-btn { width: 42px; font-size: 18px; }
+.cart-button, .owner-button { padding: 0 16px; font-weight: 800; }
+.owner-button.active {
+  background: var(--mint);
+  border-color: transparent;
+  color: #07150e;
+}
+.cart-button span {
+  margin-left: 8px;
+  background: var(--gold);
+  color: #151515;
+  padding: 2px 8px;
+  border-radius: 999px;
 }
 
-function renderReviews() {
-    reviewsContainer.innerHTML = '';
-    defaultReviews.forEach(rev => {
-        const card = document.createElement('div');
-        card.className = 'review-card';
-        let starsHTML = Array(rev.stars).fill('<i data-lucide="star" style="width:14px; height:14px; fill:var(--accent-gold)"></i>').join('');
-        card.innerHTML = `<div class="stars-row">${starsHTML}</div><p class="review-text">"${rev.text}"</p><div class="review-author">${rev.author}</div>`;
-        reviewsContainer.appendChild(card);
-    });
+.hero {
+  position: relative;
+  min-height: 86vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  padding: 110px clamp(18px, 5vw, 72px) 64px;
+}
+.hero-media {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(16, 17, 20, 0.94), rgba(16, 17, 20, 0.66), rgba(16, 17, 20, 0.2)),
+    url("https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?auto=format&fit=crop&w=1800&q=85") center/cover;
+}
+body.light .hero-media {
+  background:
+    linear-gradient(90deg, rgba(248, 246, 240, 0.94), rgba(248, 246, 240, 0.72), rgba(248, 246, 240, 0.18)),
+    url("https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?auto=format&fit=crop&w=1800&q=85") center/cover;
+}
+.hero-content {
+  position: relative;
+  max-width: 780px;
+}
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--mint);
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+h1, h2, h3, p { margin-top: 0; }
+h1 {
+  margin-bottom: 16px;
+  font-size: clamp(42px, 8vw, 96px);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+.hero-copy {
+  max-width: 660px;
+  color: var(--muted);
+  font-size: 18px;
+}
+.hero-actions, .hero-stats, .shop-tools, .filter-tabs, .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.hero-stats {
+  margin-top: 30px;
+}
+.hero-stats span {
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  color: var(--muted);
+}
+.hero-stats strong { color: var(--text); margin-right: 6px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text);
+  background: var(--panel);
+  font-weight: 900;
+  cursor: pointer;
+}
+.btn.primary { background: var(--gold); color: #141414; border-color: transparent; }
+.btn.ghost { background: rgba(255,255,255,0.06); }
+.btn.whatsapp { background: #1fbf75; color: #07150e; border: 0; }
+.btn.compact { min-height: 42px; padding-inline: 16px; }
+.btn.full { width: 100%; }
+
+.section {
+  padding: 86px clamp(18px, 5vw, 72px);
+}
+.section-heading {
+  max-width: 780px;
+  margin-bottom: 34px;
+}
+.section-heading h2 {
+  font-size: clamp(32px, 5vw, 58px);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.section-heading p:not(.eyebrow) { color: var(--muted); }
+
+.service-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  padding: 1px;
+}
+.service-strip article {
+  padding: 36px;
+  background: var(--panel);
+}
+.service-strip span { color: var(--gold); font-weight: 900; }
+.service-strip h2 { font-size: 22px; }
+.service-strip p { color: var(--muted); margin: 0; }
+
+.shop-tools {
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.search-box {
+  display: grid;
+  gap: 6px;
+  min-width: min(100%, 320px);
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+}
+input, textarea, select {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 13px 14px;
+  outline: none;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--gold); }
+.filter-tabs button {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 11px 15px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.filter-tabs button.active { background: var(--mint); color: #07150e; border-color: transparent; }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+.product-card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.product-card:hover,
+.product-card:focus {
+  border-color: rgba(216, 179, 90, 0.7);
+  transform: translateY(-2px);
+  outline: none;
+}
+.product-card figure {
+  margin: 0;
+  aspect-ratio: 1 / 0.9;
+  background: #f8f5ee;
+  overflow: hidden;
+  padding: 16px;
+}
+.product-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+.product-card:hover img { transform: scale(1.02); }
+.product-body { padding: 16px; }
+.badge {
+  display: inline-flex;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(99, 214, 179, 0.14);
+  color: var(--mint);
+  font-size: 12px;
+  font-weight: 900;
+}
+.product-body h3 { margin: 12px 0 6px; font-size: 17px; }
+.product-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+}
+.price { color: var(--gold); font-weight: 900; }
+.card-actions {
+  display: grid;
+  grid-template-columns: 1fr 44px;
+  gap: 10px;
+  margin-top: 16px;
+}
+.card-actions .icon-btn {
+  width: auto;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 900;
+}
+.edit-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+.hidden { display: none !important; }
+
+.grooming-layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 24px;
+}
+.grooming-image {
+  min-height: 520px;
+  border-radius: 8px;
+  background: url("https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1200&q=85") center/cover;
+}
+.package-list {
+  display: grid;
+  gap: 14px;
+}
+.package-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.package-card p { color: var(--muted); margin-bottom: 0; }
+.package-card strong { color: var(--gold); font-size: 22px; }
+
+.review-masonry {
+  columns: 3 260px;
+  column-gap: 18px;
+}
+.google-rating {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 28px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(216, 179, 90, 0.16), transparent),
+    var(--panel);
+}
+.google-rating div {
+  display: grid;
+  gap: 4px;
+}
+.rating-stars {
+  color: var(--gold);
+  font-size: 22px;
+  line-height: 1;
+}
+.google-rating strong {
+  font-size: 24px;
+}
+.google-rating p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+.review-masonry article {
+  break-inside: avoid;
+  margin: 0 0 18px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.review-masonry strong { color: var(--gold); }
+.review-masonry p { margin: 14px 0; }
+.review-masonry span { color: var(--muted); font-weight: 800; }
+.review-card {
+  min-height: 210px;
+}
+.review-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.review-head img {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold);
+  background: var(--panel-2);
+}
+.review-head strong {
+  display: block;
+  color: var(--text);
+}
+.review-head span {
+  display: block;
+  color: var(--gold);
+  font-size: 13px;
+  line-height: 1.2;
+}
+.review-card p {
+  color: var(--muted);
+  font-size: 18px;
 }
 
-function renderFAQs() {
-    faqList.innerHTML = '';
-    currentFAQs.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'faq-item';
-        div.innerHTML = `<div class="faq-q">${item.question}</div><div class="faq-a">${item.answer}</div>`;
-        faqList.prepend(div);
-    });
+.location-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  gap: 24px;
+  align-items: stretch;
+}
+.map-shell {
+  min-height: 520px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+.map-shell iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 520px;
+  border: 0;
+  filter: grayscale(0.25) contrast(1.08);
+}
+.visit-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(216, 179, 90, 0.12), transparent 42%),
+    var(--panel);
+}
+.visit-card h3 {
+  margin-bottom: 0;
+  font-size: 30px;
+}
+.visit-card p {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+.visit-list {
+  display: grid;
+  gap: 10px;
+  color: var(--muted);
+}
+.visit-list span {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
 }
 
-// Category Navigation Intercept Handler
-filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeCategoryFilter = btn.getAttribute('data-category');
-        renderCatalog();
-    });
-});
+.faq-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.faq-list {
+  display: grid;
+  gap: 10px;
+}
+.login-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--muted);
+}
+.faq-item {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.faq-item strong { display: block; margin-bottom: 6px; }
+.faq-item p { color: var(--muted); margin: 0; }
+.faq-answer-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
 
-// Admin System Controls Toggles
-adminToggleBtn.addEventListener('click', () => {
-    adminModeActive = !adminModeActive;
-    document.body.classList.toggle('admin-active', adminModeActive);
-    adminToggleBtn.classList.toggle('btn-gold', adminModeActive);
-    if(!adminModeActive) {
-        currentProducts.forEach(p => p.isEditing = false);
-        renderCatalog();
-    }
-});
+.inquiry-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 24px;
+}
+.inquiry-form, .contact-panel {
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.inquiry-form {
+  display: grid;
+  gap: 16px;
+}
+.inquiry-form label {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+}
+.contact-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.contact-panel p { color: var(--muted); margin-bottom: 0; }
 
-// Grid Inner Element Intercept Handling
-productGrid.addEventListener('click', (e) => {
-    const card = e.target.closest('.product-card');
-    if (!card) return;
-    const prodId = card.getAttribute('data-id');
-    const targetProduct = currentProducts.find(p => p.id === prodId);
+.cart-drawer, .modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(8px);
+}
+.cart-drawer.open, .modal.open { display: block; }
+.cart-panel {
+  margin-left: auto;
+  width: min(440px, 100%);
+  min-height: 100%;
+  background: var(--panel);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+.cart-head, .cart-row, .cart-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.cart-items {
+  display: grid;
+  gap: 12px;
+  margin: 24px 0;
+}
+.cart-row {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+.cart-row small { color: var(--muted); }
+.cart-total {
+  border-top: 1px solid var(--line);
+  padding: 18px 0;
+}
+.modal {
+  place-items: center;
+  padding: 18px;
+}
+.modal.open { display: grid; }
+.modal-card {
+  position: relative;
+  width: min(520px, 100%);
+  padding: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+.login-card p {
+  color: var(--muted);
+}
+.login-field {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+}
+.product-detail-card {
+  width: min(1040px, 100%);
+}
+.product-detail {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(300px, 1.05fr);
+  gap: 28px;
+  align-items: stretch;
+}
+.product-detail figure {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  min-height: 460px;
+  padding: 24px;
+  border-radius: 8px;
+  background: #f8f5ee;
+}
+.product-detail img {
+  width: 100%;
+  height: 100%;
+  max-height: 430px;
+  object-fit: contain;
+}
+.product-detail-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-right: 22px;
+}
+.product-detail-copy h2 {
+  margin-bottom: 0;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.05;
+}
+.detail-price {
+  color: var(--gold);
+  font-size: 26px;
+}
+.product-detail-copy p {
+  color: var(--muted);
+}
+.detail-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+.detail-list div {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.detail-list dt {
+  color: var(--muted);
+  font-weight: 800;
+}
+.detail-list dd {
+  margin: 0;
+}
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: auto;
+}
 
-    if (e.target.closest('.edit-card-btn')) {
-        targetProduct.isEditing = true;
-        renderCatalog();
-        return;
-    }
+@media (max-width: 980px) {
+  .site-nav {
+    position: absolute;
+    top: 74px;
+    left: 18px;
+    right: 18px;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+  }
+  .site-nav.open { display: flex; }
+  .nav-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--panel);
+    color: var(--text);
+  }
+  .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .service-strip, .grooming-layout, .inquiry-grid, .location-layout, .product-detail { grid-template-columns: 1fr; }
+  .grooming-image { min-height: 360px; }
+  .map-shell, .map-shell iframe { min-height: 380px; }
+  .product-detail figure { min-height: 320px; }
+}
 
-    if (e.target.closest('.save-card-btn')) {
-        targetProduct.name = card.querySelector('.edit-name').value.trim() || targetProduct.name;
-        targetProduct.category = card.querySelector('.edit-category').value;
-        targetProduct.price = card.querySelector('.edit-price').value.trim() || targetProduct.price;
-        targetProduct.image = card.querySelector('.edit-image').value.trim();
-        targetProduct.isEditing = false;
-        
-        localStorage.setItem('pawboo_supply_data', JSON.stringify(currentProducts));
-        renderCatalog();
-    }
-});
-
-// Form Submissions Controls pipelines
-faqForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const val = faqInput.value.trim();
-    if(!val) return;
-    currentFAQs.push({ question: val, answer: "Automated Desk Protocol: Security tracking link attached. System routing will finalize verification and provide answers within 2 hours." });
-    localStorage.setItem('pawboo_supply_faqs', JSON.stringify(currentFAQs));
-    renderFAQs();
-    lucide.createIcons();
-    faqForm.reset();
-});
-
-enterpriseInquiryForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    successModal.classList.add('active');
-    enterpriseInquiryForm.reset();
-});
-
-closeModalBtn.addEventListener('click', () => { successModal.classList.remove('active'); });
-successModal.addEventListener('click', (e) => { if(e.target === successModal) successModal.classList.remove('active'); });
-
-// Core Initialization Entry
-renderCatalog();
-renderReviews();
-renderFAQs();
+@media (max-width: 620px) {
+  .announcement { flex-direction: column; gap: 2px; }
+  .site-header { padding: 12px 16px; }
+  .brand small, .header-actions .icon-btn, .owner-button { display: none; }
+  .hero { min-height: 82vh; padding-top: 90px; }
+  .section { padding: 64px 16px; }
+  .product-grid, .faq-form, .package-card { grid-template-columns: 1fr; }
+  .form-row { flex-direction: column; }
+  .login-status { align-items: stretch; flex-direction: column; }
+  .google-rating { align-items: stretch; flex-direction: column; }
+  .product-detail-card { padding: 22px; }
+  .product-detail-copy { padding-right: 0; }
+  .detail-list div { grid-template-columns: 1fr; }
+}

@@ -1,69 +1,55 @@
 /**
- * Pawboo Enterprise Core Interaction Handler
- * Orchestrates dynamic local storage injection, rendering, and public queues.
+ * Pawboo supply Inventory State Controller
+ * Orchestrates local state parameters, real-time filters, and interactive interfaces.
  */
 
-// Core Seed State Context
 const defaultProducts = [
     {
-        id: "prod-a",
-        name: "Product A",
+        id: "supply-1",
+        name: "Premium Salmon Kibble Formula",
+        category: "foods",
         price: "₹XXX",
-        image: ""
+        image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc109?auto=format&fit=crop&w=600&q=80"
     },
     {
-        id: "prod-b",
-        name: "Product B",
+        id: "supply-2",
+        name: "Ergonomic Control Tactical Harness",
+        category: "care",
         price: "₹XXX",
-        image: ""
+        image: "https://images.unsplash.com/photo-1544567708-827a79119a78?auto=format&fit=crop&w=600&q=80"
     },
     {
-        id: "prod-c",
-        name: "Product C",
+        id: "supply-3",
+        name: "Enzymatic Odor & Stain Eliminator",
+        category: "cleaning",
         price: "₹XXX",
-        image: ""
+        image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80"
     }
 ];
 
 const defaultReviews = [
-    {
-        stars: 5,
-        text: "The best pet hypermarket in Kochi. Took my cat for professional grooming here; the staff was incredibly gentle, patient, and professional. They used premium quality shampoos. High-density stock of international pet brands!",
-        author: "Anjali R."
-    },
-    {
-        stars: 5,
-        text: "Finding parking near Kaloor/Kathrikadavu is usually a nightmare, but Pawboo has dedicated free parking right upfront. The inventory scale is unmatched—found the exact specialized prescription diet food I was looking for instantly.",
-        author: "Rahul K."
-    },
-    {
-        stars: 5,
-        text: "Very transparent and economical pricing structure compared to other grooming studios in Ernakulam. The facility is pristine and odorless. Highly recommend their professional dog styling services.",
-        author: "Aaron M."
-    }
+    { stars: 5, text: "Switched from generic local shops to Pawboo's tactical harness supplies. The hardware construction is elite. Unmatched UI tracking flow on their store dashboard.", author: "Devanand K." },
+    { stars: 5, text: "Their enzymatic cleaning solutions cleared out heavy cage odors instantly. Safe formulation components, clear labels, and immediate booking validation responses.", author: "Meera Nair" },
+    { stars: 5, text: "Cleanest supply acquisition experience. Excellent high-density selection of veterinary supplements and clinical diets.", author: "Gautham S." }
 ];
 
 const defaultFAQs = [
-    {
-        question: "Are grooming sessions requiring prior scheduling configurations?",
-        answer: "Yes, to retain strict pristine environment protocols, booking execution through the portal or service queue is highly recommended."
-    },
-    {
-        question: "What variants of clinical nutrition lines are available?",
-        answer: "We carry specialized global prescription diets including therapeutic gastrointestinal and high-density growth formulas."
-    }
+    { question: "Are the sanitation formulas safe around high-sensitivity felines?", answer: "Yes, all sanitation solutions are certified free of toxic phenols and ammonia variants." },
+    { question: "Can we request custom bulk imports of specific clinical food sizes?", answer: "Certainly. Open an infrastructure query at the direct desk with details to initialize tracking." }
 ];
 
-// App Initial State Instantiation
-let currentProducts = JSON.parse(localStorage.getItem('pawboo_products')) || defaultProducts;
-let currentFAQs = JSON.parse(localStorage.getItem('pawboo_faq_queue')) || defaultFAQs;
+// App Core Local Storage Initialization
+let currentProducts = JSON.parse(localStorage.getItem('pawboo_supply_data')) || defaultProducts;
+let currentFAQs = JSON.parse(localStorage.getItem('pawboo_supply_faqs')) || defaultFAQs;
+let activeCategoryFilter = "all";
 let adminModeActive = false;
 
-// DOM Selectors Registry
+// DOM Selectors
 const productGrid = document.getElementById('productGrid');
 const reviewsContainer = document.getElementById('reviewsContainer');
 const faqList = document.getElementById('faqList');
 const adminToggleBtn = document.getElementById('adminToggleBtn');
+const filterBtns = document.querySelectorAll('.filter-btn');
 const faqForm = document.getElementById('faqForm');
 const faqInput = document.getElementById('faqInput');
 const enterpriseInquiryForm = document.getElementById('enterpriseInquiryForm');
@@ -71,203 +57,179 @@ const successModal = document.getElementById('successModal');
 const closeModalBtn = document.getElementById('closeModalBtn');
 
 /**
- * Renders the E-Commerce Catalog grid dynamically.
- * Switches visual context based on active inline array configurations.
+ * Parses current state context array properties and builds elements inside the product catalog grid.
  */
 function renderCatalog() {
     productGrid.innerHTML = '';
     
-    currentProducts.forEach(product => {
+    // Filter logic pipeline
+    const itemsToRender = activeCategoryFilter === 'all' 
+        ? currentProducts 
+        : currentProducts.filter(p => p.category === activeCategoryFilter);
+
+    if(itemsToRender.length === 0) {
+        productGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 4rem 0;">No active stock items listed under this structural profile. Toggle Control Panel to inject values.</div>`;
+        return;
+    }
+
+    itemsToRender.forEach(product => {
         const card = document.createElement('div');
-        card.className = `product-card ${product.isEditing ? 'editing-mode-active' : ''}`;
+        card.className = 'product-card';
         card.setAttribute('data-id', product.id);
 
         if (product.isEditing) {
-            // Inline Administration Control Layout
             card.innerHTML = `
                 <div class="edit-fields-container">
-                    <label style="font-size:0.7rem; color:var(--text-secondary)">Product Identifier Name</label>
+                    <label>Supply Name</label>
                     <input type="text" class="edit-input edit-name" value="${product.name}">
                     
-                    <label style="font-size:0.7rem; color:var(--text-secondary)">Pricing Metric Structure</label>
+                    <label>Supply Category</label>
+                    <select class="edit-input edit-category">
+                        <option value="foods" ${product.category === 'foods' ? 'selected' : ''}>Premium Foods</option>
+                        <option value="care" ${product.category === 'care' ? 'selected' : ''}>Animal Care & Tools</option>
+                        <option value="cleaning" ${product.category === 'cleaning' ? 'selected' : ''}>Cleaning Products</option>
+                    </select>
+
+                    <label>Price Value Metric</label>
                     <input type="text" class="edit-input edit-price" value="${product.price}">
                     
-                    <label style="font-size:0.7rem; color:var(--text-secondary)">Image Absolute URL Path</label>
-                    <input type="text" class="edit-input edit-image" value="${product.image}" placeholder="https://unsplash.com/...">
+                    <label>Image Resource Path URL</label>
+                    <input type="text" class="edit-input edit-image" value="${product.image}">
                     
-                    <button class="btn btn-gold save-card-btn" style="margin-top:0.5rem; padding:0.4rem;">
-                        <i data-lucide="save" style="width:14px;"></i> Save Values
+                    <button class="btn btn-gold save-card-btn" style="margin-top:0.5rem; padding:0.5rem; justify-content:center;">
+                        <i data-lucide="check" style="width:16px;"></i> Commit Changes
                     </button>
                 </div>
             `;
         } else {
-            // Default Premium Client Surface Display
-            const imgContent = product.image 
-                ? `<img src="${product.image}" alt="${product.name}" loading="lazy">`
-                : `<div class="product-img-placeholder"><i data-lucide="package" style="width:32px; height:32px;"></i><span>No Resource Linked</span></div>`;
-
+            const readableCategory = product.category === 'foods' ? 'Premium Foods' : product.category === 'care' ? 'Care & Tools' : 'Cleaning Product';
             card.innerHTML = `
                 <div class="card-admin-action">
-                    <button class="btn-icon-only edit-card-btn" title="Modify Card Metrics">
-                        <i data-lucide="settings-2" style="width:16px; height:16px;"></i>
+                    <button class="btn-icon-only edit-card-btn" title="Modify State Data">
+                        <i data-lucide="edit-3" style="width:16px; height:16px;"></i>
                     </button>
                 </div>
                 <div>
                     <div class="product-img-wrapper">
-                        ${imgContent}
+                        <img src="${product.image || 'https://images.unsplash.com/photo-1535268647977-a403b69fc756?auto=format&fit=crop&w=600&q=80'}" alt="${product.name}" loading="lazy">
                     </div>
                     <div class="product-info">
+                        <span class="product-category-tag">${readableCategory}</span>
                         <h3 class="product-name">${product.name}</h3>
                         <div class="product-price">${product.price}</div>
                     </div>
                 </div>
-                <button class="btn btn-secondary order-cta" onclick="triggerInquiryRedirect('${product.name}')">
-                    Initiate Procurement <i data-lucide="shopping-bag" style="width:14px;"></i>
+                <button class="btn btn-secondary" onclick="routeProcurementQuery('${product.name}')" style="justify-content:center; width:100%;">
+                    Procure Resource <i data-lucide="arrow-up-right" style="width:14px;"></i>
                 </button>
             `;
         }
         productGrid.appendChild(card);
     });
-    
-    // Re-instantiate icons for newly injected structural fragments
     lucide.createIcons();
 }
 
 /**
- * Evaluates target component routing inputs and triggers contextual scrolling behavior.
+ * Routes context details to fields down inside the central engagement desk.
  */
-function triggerInquiryRedirect(productName) {
+function routeProcurementQuery(itemName) {
     document.getElementById('inquiries').scrollIntoView({ behavior: 'smooth' });
     const detailsField = document.getElementById('inquiryDetails');
     if (detailsField) {
-        detailsField.value = `Procurement Request Matrix: Initializing immediate logistics verification route for product defined as "${productName}". Please verify current regional stock volumes.`;
+        detailsField.value = `Procurement Request Routing Matrix:\nInitializing tracking validation protocol parameters for specified item identity: "${itemName}".\nVerify availability timelines immediately.`;
         detailsField.focus();
     }
 }
 
-/**
- * Iterates through array objects and outputs structured components into the masonry parent block.
- */
 function renderReviews() {
     reviewsContainer.innerHTML = '';
     defaultReviews.forEach(rev => {
         const card = document.createElement('div');
         card.className = 'review-card';
-        
-        let starsHTML = '';
-        for(let i=0; i<rev.stars; i++) {
-            starsHTML += `<i data-lucide="star" style="width:14px; height:14px; fill:var(--accent-gold)"></i>`;
-        }
-
-        card.innerHTML = `
-            <div class="stars-row">${starsHTML}</div>
-            <p class="review-text">"${rev.text}"</p>
-            <div class="review-author">${rev.author}</div>
-        `;
+        let starsHTML = Array(rev.stars).fill('<i data-lucide="star" style="width:14px; height:14px; fill:var(--accent-gold)"></i>').join('');
+        card.innerHTML = `<div class="stars-row">${starsHTML}</div><p class="review-text">"${rev.text}"</p><div class="review-author">${rev.author}</div>`;
         reviewsContainer.appendChild(card);
     });
 }
 
-/**
- * Loops and builds dynamic component queue list fragments for the FAQ board.
- */
 function renderFAQs() {
     faqList.innerHTML = '';
     currentFAQs.forEach(item => {
         const div = document.createElement('div');
         div.className = 'faq-item';
-        div.innerHTML = `
-            <div class="faq-q">${item.question}</div>
-            <div class="faq-a">${item.answer}</div>
-        `;
-        faqList.prepend(div); // Keep newest entries anchored top
+        div.innerHTML = `<div class="faq-q">${item.question}</div><div class="faq-a">${item.answer}</div>`;
+        faqList.prepend(div);
     });
 }
 
-// Global System Event Listener Implementations
+// Category Navigation Intercept Handler
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategoryFilter = btn.getAttribute('data-category');
+        renderCatalog();
+    });
+});
 
-// Toggle Global Administrator State Overlays
+// Admin System Controls Toggles
 adminToggleBtn.addEventListener('click', () => {
     adminModeActive = !adminModeActive;
     document.body.classList.toggle('admin-active', adminModeActive);
     adminToggleBtn.classList.toggle('btn-gold', adminModeActive);
-    
     if(!adminModeActive) {
-        // Force complete commit of active transformations on close
         currentProducts.forEach(p => p.isEditing = false);
         renderCatalog();
     }
 });
 
-// Structural Intercept Grid Event Framework (Handles dynamic inner fields dynamically)
+// Grid Inner Element Intercept Handling
 productGrid.addEventListener('click', (e) => {
     const card = e.target.closest('.product-card');
     if (!card) return;
     const prodId = card.getAttribute('data-id');
     const targetProduct = currentProducts.find(p => p.id === prodId);
 
-    // Clicked Settings Gear
     if (e.target.closest('.edit-card-btn')) {
         targetProduct.isEditing = true;
         renderCatalog();
         return;
     }
 
-    // Clicked Save Operations Frame
     if (e.target.closest('.save-card-btn')) {
         targetProduct.name = card.querySelector('.edit-name').value.trim() || targetProduct.name;
+        targetProduct.category = card.querySelector('.edit-category').value;
         targetProduct.price = card.querySelector('.edit-price').value.trim() || targetProduct.price;
         targetProduct.image = card.querySelector('.edit-image').value.trim();
         targetProduct.isEditing = false;
         
-        // Persist local context array parameters
-        localStorage.setItem('pawboo_products', JSON.stringify(currentProducts));
+        localStorage.setItem('pawboo_supply_data', JSON.stringify(currentProducts));
         renderCatalog();
     }
 });
 
-// Component A Form Processing Router
+// Form Submissions Controls pipelines
 faqForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const queryStr = faqInput.value.trim();
-    if(!queryStr) return;
-
-    const queryInstance = {
-        question: queryStr,
-        answer: "Automated Protocol Response: System routing verified. A Pawboo processing representative will explicitly append a verified validation parameter within 120 minutes."
-    };
-
-    currentFAQs.push(queryInstance);
-    localStorage.setItem('pawboo_faq_queue', JSON.stringify(currentFAQs));
-    
+    const val = faqInput.value.trim();
+    if(!val) return;
+    currentFAQs.push({ question: val, answer: "Automated Desk Protocol: Security tracking link attached. System routing will finalize verification and provide answers within 2 hours." });
+    localStorage.setItem('pawboo_supply_faqs', JSON.stringify(currentFAQs));
     renderFAQs();
     lucide.createIcons();
     faqForm.reset();
 });
 
-// Component B Structured Client Submission
 enterpriseInquiryForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    
-    // In a production server layout, target API parameters parse and execute transport operations here.
-    // Display System Response Modal Target Overlay
     successModal.classList.add('active');
     enterpriseInquiryForm.reset();
 });
 
-// Modal Close Intercept Form Control
-closeModalBtn.addEventListener('click', () => {
-    successModal.classList.remove('active');
-});
+closeModalBtn.addEventListener('click', () => { successModal.classList.remove('active'); });
+successModal.addEventListener('click', (e) => { if(e.target === successModal) successModal.classList.remove('active'); });
 
-// Close modal if user interacts outside bounding dimensions
-successModal.addEventListener('click', (e) => {
-    if(e.target === successModal) {
-        successModal.classList.remove('active');
-    }
-});
-
-// Core Application Component Mount Sequence Initialization
+// Core Initialization Entry
 renderCatalog();
 renderReviews();
 renderFAQs();

@@ -3,194 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pawboo Pet Hypermarket & Grooming Studio</title>
-    <!-- Premium Google Fonts: Inter & Outfit -->
+    <title>Pawboo Pet Supply Hypermarket</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons for Elite Interface Accents -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Sticky Glassmorphism Header -->
     <header class="main-header">
         <div class="header-container">
             <a href="#" class="logo">PAWBOO<span>.</span></a>
             <nav class="nav-menu">
-                <a href="#shop" class="nav-link">Shop Hypermarket</a>
-                <a href="#services" class="nav-link">Grooming Studio</a>
-                <a href="#reviews" class="nav-link">Customer Reviews</a>
-                <a href="#inquiries" class="nav-link">Inquiries</a>
+                <a href="#shop" class="nav-link">Explore Supplies</a>
+                <a href="#reviews" class="nav-link">Client Reviews</a>
+                <a href="#inquiries" class="nav-link">Direct Desk</a>
             </nav>
             <div class="header-actions">
                 <button id="adminToggleBtn" class="btn btn-secondary">
-                    <i data-lucide="shield-alert"></i> Admin Mode
+                    <i data-lucide="shield-alert"></i> Control Panel
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Split Engine Hero Section -->
     <section class="hero-section">
-        <div class="hero-split shop-side" onclick="document.getElementById('shop').scrollIntoView({behavior: 'smooth'})">
-            <div class="hero-content">
-                <span class="badge">Hypermarket Inventory</span>
-                <h1>Global Pet Supplies</h1>
-                <p>Explore elite international brands, specialized clinical nutrition, and robust play equipment.</p>
-                <span class="action-link">Browse Catalog <i data-lucide="arrow-right"></i></span>
-            </div>
-        </div>
-        <div class="hero-split service-side" onclick="document.getElementById('services').scrollIntoView({behavior: 'smooth'})">
-            <div class="hero-content">
-                <span class="badge premium-badge">Premium Care Studio</span>
-                <h1>Elite Grooming & Boarding</h1>
-                <p>Stress-free therapies, premium botanical treatments, and certified behavioral training.</p>
-                <span class="action-link">Book Appointment <i data-lucide="arrow-right"></i></span>
-            </div>
+        <div class="hero-backdrop-layer"></div>
+        <div class="hero-container">
+            <span class="badge premium-badge">Premium Pet Supply Ecosystem</span>
+            <h1>The Next Gen Hypermarket</h1>
+            <p>Moving past outdated, basic pet templates. Experience professional premium tools, specialized nutritional formulas, and non-toxic sanitation gear.</p>
+            <button class="btn btn-gold" onclick="document.getElementById('shop').scrollIntoView({behavior: 'smooth'})">
+                Explore Inventory <i data-lucide="chevron-right"></i>
+            </button>
         </div>
     </section>
 
-    <!-- Interactive E-Commerce Hypermarket Catalog -->
     <main id="shop" class="section-container">
-        <div class="section-header">
-            <div>
-                <span class="section-subtitle">Curated Offerings</span>
-                <h2 class="section-title">Premium E-Commerce Catalog</h2>
+        <div class="section-header-vertical">
+            <span class="section-subtitle">Categorized Logistics Matrix</span>
+            <h2 class="section-title">Premium Supply Catalog</h2>
+            
+            <div class="filter-tab-row">
+                <button class="filter-btn active" data-category="all">All Supplies</button>
+                <button class="filter-btn" data-category="foods">Premium Foods</button>
+                <button class="filter-btn" data-category="care">Animal Care & Tools</button>
+                <button class="filter-btn" data-category="cleaning">Cleaning Products</button>
             </div>
-            <div class="live-indicator"><span class="dot"></span> Live Stocking Protocol</div>
         </div>
 
         <div id="productGrid" class="product-grid">
-            <!-- Dynamic JavaScript Product Cards Inject Here -->
-        </div>
+            </div>
     </main>
 
-    <!-- Hybrid Services Breakdown -->
-    <section id="services" class="services-banner">
-        <div class="services-overlay-grid">
-            <div class="service-feature-card">
-                <i data-lucide="scissors" class="gold-icon"></i>
-                <h3>Advanced Cat & Dog Grooming</h3>
-                <p>Hypoallergenic therapeutic baths, precision breed styling, and sensory soothing care.</p>
-            </div>
-            <div class="service-feature-card">
-                <i data-lucide="sparkles" class="gold-icon"></i>
-                <h3>Mobile Grooming Fleets</h3>
-                <p>Luxury climate-controlled mobile treatment labs dispatched directly to your location.</p>
-            </div>
-            <div class="service-feature-card">
-                <i data-lucide="shield-check" class="gold-icon"></i>
-                <h3>Verified Medical Boarding</h3>
-                <p>Sterile, odor-free suites managed by on-site veterinary practitioners 24/7.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials / Social Proof Section (Masonry Layout) -->
-    <section id="reviews" class="section-container">
-        <div class="section-header">
-            <div>
-                <span class="section-subtitle">Verified Feedback</span>
-                <h2 class="section-title">Customer Testimonials</h2>
-            </div>
+    <section id="reviews" class="section-container reviews-dark-bg">
+        <div class="section-header-vertical" style="align-items: center; text-align: center;">
+            <span class="section-subtitle">Verified Local Transcripts</span>
+            <h2 class="section-title">Customer Experiences</h2>
         </div>
         <div class="reviews-masonry" id="reviewsContainer">
-            <!-- Reviews injected here dynamically -->
-        </div>
+            </div>
     </section>
 
-    <!-- Engagement & Inquiry Hub -->
-    <section id="inquiries" class="section-container inquiry-hub-section">
+    <section id="inquiries" class="section-container">
         <div class="inquiry-grid">
             
-            <!-- Component A: Public FAQ Interaction Queue -->
-            <div class="inquiry-card faq-component">
+            <div class="inquiry-card">
                 <div class="component-header">
                     <i data-lucide="help-circle" class="accent-icon"></i>
                     <h3>Public Knowledge Base</h3>
                 </div>
-                <p class="component-desc">Have questions regarding logistics, dietary options, or scheduling? Ask publicly below.</p>
+                <p class="component-desc">Have stock availability or logistical inquiries? Broadcast your query publicly below.</p>
                 
                 <form id="faqForm" class="hub-form-inline">
-                    <input type="text" id="faqInput" placeholder="Ask a public question (e.g., Do you offer same-day delivery near Kaloor?)..." required autocomplete="off">
+                    <input type="text" id="faqInput" placeholder="Type your supply query here..." required autocomplete="off">
                     <button type="submit" class="btn btn-primary">Broadcast</button>
                 </form>
 
                 <div class="faq-list" id="faqList">
-                    <!-- Dynamic FAQs injected here -->
-                </div>
+                    </div>
             </div>
 
-            <!-- Component B: Direct Enterprise Inquiry / Booking Form -->
-            <div class="inquiry-card booking-component">
+            <div class="inquiry-card">
                 <div class="component-header">
-                    <i data-lucide="mail" class="accent-icon"></i>
-                    <h3>Direct Email & Booking Inquiry</h3>
+                    <i data-lucide="send" class="accent-icon"></i>
+                    <h3>Direct Supply Inquiry Desk</h3>
                 </div>
-                <p class="component-desc">Initiate immediate routing to our facility intake coordination desk.</p>
+                <p class="component-desc">Submit immediate procurement details directly to our central inventory managers.</p>
                 
                 <form id="enterpriseInquiryForm" class="structured-form">
                     <div class="form-row-dual">
                         <div class="form-group">
-                            <label for="clientName">Full Name</label>
-                            <input type="text" id="clientName" placeholder="Your Name" required>
+                            <label>Your Name</label>
+                            <input type="text" id="clientName" placeholder="Client Name" required>
                         </div>
                         <div class="form-group">
-                            <label for="clientEmail">Email Address</label>
+                            <label>Email Address</label>
                             <input type="email" id="clientEmail" placeholder="name@domain.com" required>
                         </div>
                     </div>
-                    <div class="form-row-dual">
-                        <div class="form-group">
-                            <label for="clientPhone">Contact Number</label>
-                            <input type="tel" id="clientPhone" placeholder="+91 XXXXX XXXXX" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="petType">Pet Variant</label>
-                            <select id="petType" required>
-                                <option value="" disabled selected>Select Pet Type</option>
-                                <option value="Canine">Canine (Dog)</option>
-                                <option value="Feline">Feline (Cat)</option>
-                                <option value="Exotic/Other">Exotic / Alternative Variant</option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="form-group">
-                        <label for="inquiryDetails">Inquiry Specifications</label>
-                        <textarea id="inquiryDetails" rows="4" placeholder="Detail custom sizing requirements, clinical constraints, or booking dates..." required></textarea>
+                        <label>Target Requirements Description</label>
+                        <textarea id="inquiryDetails" rows="4" placeholder="List item constraints, sizing parameters, or delivery criteria..." required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-gold btn-block">Transmit Enterprise Inquiry</button>
+                    <button type="submit" class="btn btn-gold btn-block">Transmit Infrastructure Query</button>
                 </form>
             </div>
 
         </div>
     </section>
 
-    <!-- Footer System -->
     <footer class="global-footer">
-        <p>&copy; 2026 Pawboo Pet Hypermarket & Grooming Studio. All Infrastructure Persisted.</p>
+        <p>&copy; 2026 Pawboo Pet Supply Systems. Built for High-Performance Enterprise Interactivity.</p>
     </footer>
 
-    <!-- Global System Confirmation Modal Overlay -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-card">
-            <div class="modal-status-icon">
-                <i data-lucide="check-circle-2"></i>
-            </div>
-            <h3>Inquiry Sent!</h3>
-            <p>The Pawboo Team will contact you via email shortly.</p>
+            <div class="modal-status-icon"><i data-lucide="badge-check"></i></div>
+            <h3>Inquiry Routed Successfully</h3>
+            <p>Our backend tracking system has queued your query. Our central desk will follow up shortly via email.</p>
             <button class="btn btn-primary" id="closeModalBtn">Acknowledge</button>
         </div>
     </div>
 
-    <!-- Initialization Scripts -->
     <script>
-        // Initialize Lucide icons globally after page mount
-        window.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-        });
+        window.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
     </script>
     <script src="script.js"></script>
 </body>

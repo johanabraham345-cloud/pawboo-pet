@@ -242,7 +242,10 @@ function renderFaqs() {
       <p>${escapeHtml(item.a)}</p>
       <form class="faq-answer-form ${isOwner() ? "" : "hidden"}" data-faq-index="${index}">
         <textarea name="answer" rows="3" aria-label="Reply to ${escapeHtml(item.q)}">${escapeHtml(item.a)}</textarea>
-        <button class="btn compact" type="submit">Save Answer</button>
+        <div class="faq-owner-actions">
+          <button class="btn compact" type="submit">Save Answer</button>
+          <button class="btn compact danger" type="button" data-delete-faq="${index}">Delete Question</button>
+        </div>
       </form>
     </article>
   `).join("");
@@ -370,7 +373,7 @@ function ownerLogout() {
 function syncRoute() {
   const hash = location.hash || "#home";
   qsa(".site-nav a").forEach((link) => link.classList.toggle("active", link.getAttribute("href") === hash));
-  if (hash === "#booking") location.hash = "#grooming";
+  if (hash === "#appointment") location.hash = "#grooming";
   if (hash === "#maps") location.hash = "#location";
 }
 
@@ -486,6 +489,17 @@ function initEvents() {
     showModal("Answer Saved", "The FAQ answer has been updated on this browser.");
   });
 
+  qs("#faqList").addEventListener("click", (event) => {
+    const deleteButton = event.target.closest("[data-delete-faq]");
+    if (!deleteButton || !isOwner()) return;
+    const index = Number(deleteButton.dataset.deleteFaq);
+    if (!faqs[index]) return;
+    faqs.splice(index, 1);
+    save(STORAGE_KEYS.faqs, faqs);
+    renderFaqs();
+    showModal("Question Deleted", "The FAQ question has been removed on this browser.");
+  });
+
   qs("#inquiryForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const data = Object.fromEntries(new FormData(event.target).entries());
@@ -493,15 +507,6 @@ function initEvents() {
     qs("#whatsappQuick").href = createWhatsAppLink(message);
     window.location.href = createMailLink(`Pawboo Inquiry - ${data.need}`, message);
     showModal("Inquiry Email Opened", `Your inquiry has been addressed to ${OWNER_EMAIL}. You can also continue on WhatsApp.`);
-    event.target.reset();
-  });
-
-  qs("#appointmentForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    const data = Object.fromEntries(new FormData(event.target).entries());
-    const message = `Pawboo appointment request\n\nName: ${data.name}\nPhone: ${data.phone}\nType: ${data.type}\nPreferred date: ${data.date}\nPreferred time: ${data.time}\nNotes: ${data.notes || "No notes added"}`;
-    window.location.href = createMailLink(`Pawboo Appointment - ${data.type}`, message);
-    showModal("Appointment Email Opened", `Your appointment request has been addressed to ${OWNER_EMAIL}.`);
     event.target.reset();
   });
 

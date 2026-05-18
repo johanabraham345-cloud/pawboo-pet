@@ -71,6 +71,12 @@ const defaultReviews = [
     rating: 5,
     text: "Took my Lhasa Apso for grooming and loved the experience! The staff were kind and friendly to my dog. They took great care and did a perfect job.",
     photo: "assets/reviews/customer-3-treasa-stimna-cleetus.png"
+  },
+  {
+    name: "Saurabh Sunny",
+    rating: 5,
+    text: "We had a wonderful experience grooming our pet Lucky at Pawboo. The grooming got over in 1 hour and the service was commendable.",
+    photo: "assets/reviews/customer-4-saurabh-sunny.png"
   }
 ];
 
@@ -86,6 +92,7 @@ let faqs = load(STORAGE_KEYS.faqs, defaultFaqs);
 let currentFilter = "all";
 let loggedInEmail = localStorage.getItem(STORAGE_KEYS.ownerEmail) || "";
 let activeProductId = "";
+let productsExpanded = false;
 
 const qs = (selector) => document.querySelector(selector);
 const qsa = (selector) => [...document.querySelectorAll(selector)];
@@ -158,8 +165,11 @@ function renderProducts() {
     const matchesFilter = currentFilter === "all" || productItem.category === currentFilter;
     return matchesFilter && searchText.includes(term);
   });
+  const isCompactView = window.matchMedia("(max-width: 620px)").matches;
+  const previewLimit = isCompactView ? 6 : 12;
+  const visibleProducts = productsExpanded ? filtered : filtered.slice(0, previewLimit);
 
-  qs("#productGrid").innerHTML = filtered.map((productItem) => `
+  qs("#productGrid").innerHTML = visibleProducts.map((productItem) => `
     <article class="product-card" data-id="${escapeHtml(productItem.id)}" tabindex="0" aria-label="View ${escapeHtml(productItem.name)} details">
       <figure><img src="${escapeHtml(productItem.image)}" alt="${escapeHtml(productItem.name)}" loading="lazy"></figure>
       <div class="product-body">
@@ -183,6 +193,16 @@ function renderProducts() {
       </div>
     </article>
   `).join("") || `<p class="empty">No products found. Try another search.</p>`;
+
+  const moreWrap = qs(".product-more");
+  const moreButton = qs("#productMoreBtn");
+  const countText = qs("#productCountText");
+  const hasMore = filtered.length > previewLimit;
+  moreWrap.classList.toggle("hidden", !hasMore);
+  moreButton.textContent = productsExpanded ? "Show fewer products" : "See more products";
+  countText.textContent = hasMore
+    ? `Showing ${visibleProducts.length} of ${filtered.length} products`
+    : `${filtered.length} products shown`;
 }
 
 function renderPackages() {
@@ -369,11 +389,20 @@ function initEvents() {
     localStorage.setItem(STORAGE_KEYS.theme, document.body.classList.contains("light") ? "light" : "dark");
   });
 
-  qs("#productSearch").addEventListener("input", renderProducts);
+  qs("#productSearch").addEventListener("input", () => {
+    productsExpanded = false;
+    renderProducts();
+  });
+  qs("#productMoreBtn").addEventListener("click", () => {
+    productsExpanded = !productsExpanded;
+    renderProducts();
+    if (!productsExpanded) qs("#shop").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 
   qsa("[data-filter]").forEach((button) => {
     button.addEventListener("click", () => {
       currentFilter = button.dataset.filter;
+      productsExpanded = false;
       qsa("[data-filter]").forEach((item) => item.classList.remove("active"));
       button.classList.add("active");
       renderProducts();
@@ -467,6 +496,15 @@ function initEvents() {
     event.target.reset();
   });
 
+  qs("#appointmentForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target).entries());
+    const message = `Pawboo appointment request\n\nName: ${data.name}\nPhone: ${data.phone}\nType: ${data.type}\nPreferred date: ${data.date}\nPreferred time: ${data.time}\nNotes: ${data.notes || "No notes added"}`;
+    window.location.href = createMailLink(`Pawboo Appointment - ${data.type}`, message);
+    showModal("Appointment Email Opened", `Your appointment request has been addressed to ${OWNER_EMAIL}.`);
+    event.target.reset();
+  });
+
   qs("#cartOpen").addEventListener("click", () => {
     qs("#cartDrawer").classList.add("open");
     qs("#cartDrawer").setAttribute("aria-hidden", "false");
@@ -534,6 +572,7 @@ function initEvents() {
     window.open(createWhatsAppLink(`Hi Pawboo, I want details for ${productItem.name}. Price: ${rupee(productItem.price)}.`), "_blank");
   });
   window.addEventListener("hashchange", syncRoute);
+  window.addEventListener("resize", renderProducts);
 }
 
 function init() {

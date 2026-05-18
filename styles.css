@@ -534,6 +534,16 @@ input:focus, textarea:focus, select:focus { border-color: var(--gold); }
   padding-top: 14px;
   border-top: 1px solid var(--line);
 }
+.faq-owner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.btn.danger {
+  background: rgba(255, 127, 110, 0.14);
+  border-color: rgba(255, 127, 110, 0.45);
+  color: var(--coral);
+}
 
 .inquiry-grid {
   display: grid;
@@ -564,37 +574,6 @@ input:focus, textarea:focus, select:focus { border-color: var(--gold); }
   gap: 12px;
 }
 .contact-panel p { color: var(--muted); margin-bottom: 0; }
-.appointment-card {
-  display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: 24px;
-  margin-top: 24px;
-  padding: 28px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background:
-    linear-gradient(90deg, rgba(99, 214, 179, 0.12), transparent),
-    var(--panel);
-}
-.appointment-card h3 {
-  font-size: 30px;
-  margin-bottom: 10px;
-}
-.appointment-card p:not(.eyebrow) {
-  color: var(--muted);
-}
-.appointment-form {
-  display: grid;
-  gap: 16px;
-}
-.appointment-form label {
-  display: grid;
-  gap: 6px;
-  flex: 1;
-  color: var(--muted);
-  font-weight: 800;
-  font-size: 13px;
-}
 
 .cart-drawer, .modal {
   position: fixed;
@@ -759,7 +738,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--gold); }
     color: var(--text);
   }
   .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .service-strip, .grooming-layout, .inquiry-grid, .location-layout, .product-detail, .appointment-card { grid-template-columns: 1fr; }
+  .service-strip, .grooming-layout, .inquiry-grid, .location-layout, .product-detail { grid-template-columns: 1fr; }
   .grooming-image { min-height: 360px; }
   .map-shell, .map-shell iframe { min-height: 380px; }
   .product-detail figure { min-height: 320px; }

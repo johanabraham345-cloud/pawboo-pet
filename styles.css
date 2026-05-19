@@ -760,7 +760,6 @@ input:focus, textarea:focus, select:focus { border-color: var(--gold); }
 }
 
 @media (max-width: 980px) {
-  .announcement { display: none; }
   .site-nav {
     position: absolute;
     top: 100%;
@@ -942,4 +941,8 @@ input:focus, textarea:focus, select:focus { border-color: var(--gold); }
   .product-detail-card { padding: 22px; }
   .product-detail-copy { padding-right: 0; }
   .detail-list div { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 767px) {
+  .announcement { display: none !important; }
 }

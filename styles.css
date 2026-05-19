@@ -795,7 +795,7 @@ input:focus, textarea:focus, select:focus { border-color: var(--gold); }
 }
 
 @media (max-width: 620px) {
-  .announcement { flex-direction: column; gap: 2px; }
+  .announcement { display: none; }
   .site-header {
     gap: 10px;
     padding: 10px 12px;

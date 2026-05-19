@@ -212,7 +212,7 @@ h1 {
 
 .service-strip {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1px;
   background: var(--line);
   padding: 1px;
@@ -368,6 +368,53 @@ input:focus, textarea:focus, select:focus { border-color: var(--gold); }
 }
 .package-card p { color: var(--muted); margin-bottom: 0; }
 .package-card strong { color: var(--gold); font-size: 22px; }
+
+.boarding-layout {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 32px;
+}
+.boarding-image {
+  min-height: 580px;
+  border-radius: 8px;
+  background: url("https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=85") center/cover;
+}
+.boarding-right {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.boarding-highlights {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.boarding-highlight-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.boarding-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.boarding-highlight-item strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.boarding-highlight-item p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+}
+.boarding-plans {
+  display: grid;
+  gap: 14px;
+}
 
 .review-masonry {
   columns: 3 260px;
@@ -738,8 +785,9 @@ input:focus, textarea:focus, select:focus { border-color: var(--gold); }
     color: var(--text);
   }
   .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .service-strip, .grooming-layout, .inquiry-grid, .location-layout, .product-detail { grid-template-columns: 1fr; }
-  .grooming-image { min-height: 360px; }
+  .service-strip, .grooming-layout, .boarding-layout, .inquiry-grid, .location-layout, .product-detail { grid-template-columns: 1fr; }
+  .grooming-image, .boarding-image { min-height: 360px; }
+  .boarding-highlights { grid-template-columns: 1fr; }
   .map-shell, .map-shell iframe { min-height: 380px; }
   .product-detail figure { min-height: 320px; }
 }

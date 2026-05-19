@@ -53,6 +53,11 @@ const packages = [
   { name: "Cat Care Session", price: 1299, text: "Comb-out, nail care, dry bath option, and mat control for cats." }
 ];
 
+const boardingPackages = [
+  { name: "Day Care (Classic)", price: 499, text: "Supervised daytime stay (up to 10 hours) with scheduled play, feeding, and walks." },
+  { name: "Extended Vacation Care", price: 799, text: "For stays longer than 5 days. Daily grooming checks, playtime sessions, and premium amenities included." }
+];
+
 const defaultReviews = [
   {
     name: "Mohamed Ridhaf",
@@ -215,6 +220,21 @@ function renderPackages() {
       <div>
         <strong>${rupee(item.price)}</strong>
         <button class="btn compact" type="button" data-book="${item.name}">Book</button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderBoardingPlans() {
+  qs("#boardingPlans").innerHTML = boardingPackages.map((item) => `
+    <article class="package-card">
+      <div>
+        <h3>${item.name}</h3>
+        <p>${item.text}</p>
+      </div>
+      <div>
+        <strong>${rupee(item.price)}/day</strong>
+        <button class="btn compact" type="button" data-book-boarding="${item.name}">Book</button>
       </div>
     </article>
   `).join("");
@@ -464,6 +484,12 @@ function initEvents() {
     window.open(createWhatsAppLink(`Hi Pawboo, I want to book the ${button.dataset.book} grooming package.`), "_blank");
   });
 
+  qs("#boardingPlans").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-book-boarding]");
+    if (!button) return;
+    window.open(createWhatsAppLink(`Hi Pawboo, I want to book the ${button.dataset.bookBoarding} boarding package.`), "_blank");
+  });
+
   qs("#faqForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const input = qs("#faqInput");
@@ -584,6 +610,7 @@ function init() {
   if (localStorage.getItem(STORAGE_KEYS.theme) === "light") document.body.classList.add("light");
   renderProducts();
   renderPackages();
+  renderBoardingPlans();
   renderReviews();
   renderOwnerState();
   renderFaqs();

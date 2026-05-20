@@ -760,31 +760,32 @@ input:focus, textarea:focus, select:focus { border-color: var(--gold); }
 }
 
 @media (max-width: 980px) {
-  .site-nav {
-    position: absolute;
-    top: 100%;
-    margin-top: 8px;
-    left: 18px;
-    right: 18px;
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 12px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: var(--panel);
+  .site-header {
+    flex-wrap: wrap;
+    gap: 12px;
   }
-  .site-nav.open { display: flex; }
+  .site-nav {
+    display: flex;
+    flex-direction: row;
+    position: static;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0 0 4px;
+    margin: 0;
+    border: none;
+    background: transparent;
+    order: 3;
+    gap: 10px;
+  }
+  .site-nav::-webkit-scrollbar { display: none; }
+  .site-nav a {
+    white-space: nowrap;
+    flex: 0 0 auto;
+    padding: 8px 12px;
+  }
   .nav-toggle {
-    display: inline-grid;
-    place-items: center;
-    width: auto;
-    padding: 0 16px;
-    height: 42px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--panel);
-    color: var(--text);
+    display: none;
   }
   .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .service-strip, .grooming-layout, .boarding-layout, .inquiry-grid, .location-layout, .product-detail { grid-template-columns: 1fr; }

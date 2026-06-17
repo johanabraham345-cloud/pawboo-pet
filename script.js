@@ -53,11 +53,6 @@ const packages = [
   { name: "Cat Care Session", price: 1299, text: "Comb-out, nail care, dry bath option, and mat control for cats." }
 ];
 
-const boardingPackages = [
-  { name: "Day Care (Classic)", price: 499, text: "Supervised daytime stay (up to 10 hours) with scheduled play, feeding, and walks." },
-  { name: "Extended Vacation Care", price: 799, text: "For stays longer than 5 days. Daily grooming checks, playtime sessions, and premium amenities included." }
-];
-
 const defaultReviews = [
   {
     name: "Mohamed Ridhaf",
@@ -87,7 +82,7 @@ const defaultReviews = [
 
 const defaultFaqs = [
   { q: "Do you offer home delivery?", a: "Yes. Share your location and product list through WhatsApp for confirmation." },
-  { q: "Can I book grooming online?", a: "Yes. Use the grooming buttons or inquiry form and the team will confirm a slot." },
+  { q: "Can I request a grooming appointment online?", a: "Yes. Use the grooming buttons or inquiry form and the team will confirm a slot." },
   { q: "Can you suggest food for allergies?", a: "Yes. Mention breed, age, current food, and allergy signs in the inquiry form." }
 ];
 
@@ -139,6 +134,23 @@ function createMailLink(subject, body) {
   return `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
+function createProductId(name) {
+  return `${name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now()}`;
+}
+
+function readImageFile(file) {
+  return new Promise((resolve, reject) => {
+    if (!file) {
+      resolve("");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 function isOwner() {
   return loggedInEmail.trim().toLowerCase() === OWNER_EMAIL;
 }
@@ -152,6 +164,7 @@ function getProductAction(product) {
 }
 
 function getProductDescription(productItem) {
+  if (productItem.description) return productItem.description;
   const descriptions = {
     food: "A carefully selected Pawboo food product for daily feeding and healthy routines. Please confirm age, breed, flavor, and pack size before purchase.",
     treats: "A tasty reward option for training, bonding, and snack time. Ask Pawboo for feeding guidance based on your pet's size and diet.",
@@ -174,7 +187,26 @@ function renderProducts() {
   const previewLimit = isCompactView ? 6 : 12;
   const visibleProducts = productsExpanded ? filtered : filtered.slice(0, previewLimit);
 
-  qs("#productGrid").innerHTML = visibleProducts.map((productItem) => `
+  qs("#adminCatalogActions").classList.toggle("hidden", !isOwner());
+
+  qs("#productGrid").innerHTML = visibleProducts.map((productItem) => {
+    const adminTools = isOwner() ? `
+      <div class="product-admin-actions">
+        <button class="icon-btn" type="button" aria-label="Edit ${escapeHtml(productItem.name)}" data-edit="${escapeHtml(productItem.id)}">Edit</button>
+        <button class="icon-btn danger" type="button" aria-label="Remove ${escapeHtml(productItem.name)}" data-delete-product="${escapeHtml(productItem.id)}">Remove</button>
+      </div>
+      <form class="edit-form hidden" data-form="${escapeHtml(productItem.id)}">
+        <input name="name" value="${escapeHtml(productItem.name)}" aria-label="Product name">
+        <input name="price" type="number" min="0" value="${productItem.price ?? ""}" placeholder="Leave empty for Ask price" aria-label="Product price">
+        <input name="stock" value="${escapeHtml(productItem.stock)}" aria-label="Product stock label">
+        <input name="category" value="${escapeHtml(productItem.category)}" aria-label="Product category">
+        <input name="image" value="${escapeHtml(productItem.image)}" aria-label="Product image URL">
+        <textarea name="description" rows="3" aria-label="Product description">${escapeHtml(getProductDescription(productItem))}</textarea>
+        <button class="btn compact" type="submit">Save Product</button>
+      </form>
+    ` : "";
+
+    return `
     <article class="product-card" data-id="${escapeHtml(productItem.id)}" tabindex="0" aria-label="View ${escapeHtml(productItem.name)} details">
       <figure><img src="${escapeHtml(productItem.image)}" alt="${escapeHtml(productItem.name)}" loading="lazy"></figure>
       <div class="product-body">
@@ -186,18 +218,12 @@ function renderProducts() {
         </div>
         <div class="card-actions">
           <button class="btn primary" type="button" data-add="${escapeHtml(productItem.id)}">${getProductAction(productItem)}</button>
-          <button class="icon-btn" type="button" aria-label="Edit ${escapeHtml(productItem.name)}" data-edit="${escapeHtml(productItem.id)}">Edit</button>
         </div>
-        <form class="edit-form hidden" data-form="${escapeHtml(productItem.id)}">
-          <input name="name" value="${escapeHtml(productItem.name)}" aria-label="Product name">
-          <input name="price" type="number" min="0" value="${productItem.price ?? ""}" placeholder="Leave empty for Ask price" aria-label="Product price">
-          <input name="stock" value="${escapeHtml(productItem.stock)}" aria-label="Product stock label">
-          <input name="image" value="${escapeHtml(productItem.image)}" aria-label="Product image URL">
-          <button class="btn compact" type="submit">Save Product</button>
-        </form>
+        ${adminTools}
       </div>
     </article>
-  `).join("") || `<p class="empty">No products found. Try another search.</p>`;
+  `;
+  }).join("") || `<p class="empty">No products found. Try another search.</p>`;
 
   const moreWrap = qs(".product-more");
   const moreButton = qs("#productMoreBtn");
@@ -219,22 +245,7 @@ function renderPackages() {
       </div>
       <div>
         <strong>${rupee(item.price)}</strong>
-        <button class="btn compact" type="button" data-book="${item.name}">Book</button>
-      </div>
-    </article>
-  `).join("");
-}
-
-function renderBoardingPlans() {
-  qs("#boardingPlans").innerHTML = boardingPackages.map((item) => `
-    <article class="package-card">
-      <div>
-        <h3>${item.name}</h3>
-        <p>${item.text}</p>
-      </div>
-      <div>
-        <strong>${rupee(item.price)}/day</strong>
-        <button class="btn compact" type="button" data-book-boarding="${item.name}">Book</button>
+        <button class="btn compact" type="button" data-appointment="${item.name}">Appointment</button>
       </div>
     </article>
   `).join("");
@@ -279,7 +290,7 @@ function renderOwnerState() {
 
   if (isOwner()) {
     status.innerHTML = `
-      <span>Logged in as ${escapeHtml(loggedInEmail)}. FAQ reply tools are available.</span>
+      <span>Logged in as ${escapeHtml(loggedInEmail)}. Admin catalog and FAQ tools are available.</span>
       <button class="btn compact" id="faqOwnerLogout" type="button">Logout</button>
     `;
     ownerButton.textContent = "Account";
@@ -382,10 +393,23 @@ function closeOwnerModal() {
   qs("#ownerModal").setAttribute("aria-hidden", "true");
 }
 
+function openAddProductModal() {
+  if (!isOwner()) return;
+  qs("#addProductForm").reset();
+  qs("#addProductModal").classList.add("open");
+  qs("#addProductModal").setAttribute("aria-hidden", "false");
+}
+
+function closeAddProductModal() {
+  qs("#addProductModal").classList.remove("open");
+  qs("#addProductModal").setAttribute("aria-hidden", "true");
+}
+
 function ownerLogout() {
   loggedInEmail = "";
   localStorage.removeItem(STORAGE_KEYS.ownerEmail);
   renderOwnerState();
+  renderProducts();
   renderFaqs();
   closeOwnerModal();
 }
@@ -435,13 +459,25 @@ function initEvents() {
   qs("#productGrid").addEventListener("click", (event) => {
     const addButton = event.target.closest("[data-add]");
     const editButton = event.target.closest("[data-edit]");
+    const deleteButton = event.target.closest("[data-delete-product]");
     const card = event.target.closest(".product-card");
     if (addButton) {
       addToCart(addButton.dataset.add);
       return;
     }
     if (editButton) {
+      if (!isOwner()) return;
       qs(`[data-form="${editButton.dataset.edit}"]`).classList.toggle("hidden");
+      return;
+    }
+    if (deleteButton) {
+      if (!isOwner()) return;
+      products = products.filter((productItem) => productItem.id !== deleteButton.dataset.deleteProduct);
+      cart = cart.filter((item) => item.id !== deleteButton.dataset.deleteProduct);
+      save(STORAGE_KEYS.products, products);
+      renderProducts();
+      renderCart();
+      showModal("Product Removed", "The product has been removed from this browser catalog.");
       return;
     }
     if (card && !event.target.closest("form, input, textarea, select")) openProductModal(card.dataset.id);
@@ -456,6 +492,7 @@ function initEvents() {
 
   qs("#productGrid").addEventListener("submit", (event) => {
     event.preventDefault();
+    if (!isOwner()) return;
     const form = event.target;
     const id = form.dataset.form;
     const formData = new FormData(form);
@@ -465,7 +502,9 @@ function initEvents() {
       name: formData.get("name").trim(),
       price: priceValue === "" ? null : Number(priceValue),
       stock: formData.get("stock").trim(),
-      image: formData.get("image").trim()
+      category: formData.get("category").trim().toLowerCase(),
+      image: formData.get("image").trim(),
+      description: formData.get("description").trim()
     } : productItem);
     save(STORAGE_KEYS.products, products);
     renderProducts();
@@ -473,21 +512,47 @@ function initEvents() {
   });
 
   qs("#resetCatalog").addEventListener("click", () => {
+    if (!isOwner()) return;
     products = structuredClone(defaultProducts);
     save(STORAGE_KEYS.products, products);
     renderProducts();
   });
 
-  qs("#packageList").addEventListener("click", (event) => {
-    const button = event.target.closest("[data-book]");
-    if (!button) return;
-    window.open(createWhatsAppLink(`Hi Pawboo, I want to book the ${button.dataset.book} grooming package.`), "_blank");
+  qs("#addProductOpen").addEventListener("click", openAddProductModal);
+  qs("#addProductClose").addEventListener("click", closeAddProductModal);
+  qs("#addProductModal").addEventListener("click", (event) => {
+    if (event.target.id === "addProductModal") closeAddProductModal();
+  });
+  qs("#addProductForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!isOwner()) return;
+    const form = event.target;
+    const formData = new FormData(form);
+    const name = formData.get("name").trim();
+    const priceValue = formData.get("price").trim();
+    const uploadedImage = await readImageFile(qs("#newProductImage").files[0]);
+    const imageUrl = uploadedImage || formData.get("imageUrl").trim() || "https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8?auto=format&fit=crop&w=900&q=80";
+    const newProduct = {
+      id: createProductId(name),
+      name,
+      category: formData.get("category"),
+      price: priceValue === "" ? null : Number(priceValue),
+      stock: formData.get("stock").trim(),
+      image: imageUrl,
+      description: formData.get("description").trim()
+    };
+    products.unshift(newProduct);
+    productsExpanded = true;
+    save(STORAGE_KEYS.products, products);
+    renderProducts();
+    closeAddProductModal();
+    showModal("Product Added", "The new product has been added to this browser catalog.");
   });
 
-  qs("#boardingPlans").addEventListener("click", (event) => {
-    const button = event.target.closest("[data-book-boarding]");
+  qs("#packageList").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-appointment]");
     if (!button) return;
-    window.open(createWhatsAppLink(`Hi Pawboo, I want to book the ${button.dataset.bookBoarding} boarding package.`), "_blank");
+    window.open(createWhatsAppLink(`Hi Pawboo, I want an appointment for the ${button.dataset.appointment} grooming package.`), "_blank");
   });
 
   qs("#faqForm").addEventListener("submit", (event) => {
@@ -572,9 +637,10 @@ function initEvents() {
     loggedInEmail = submittedEmail;
     localStorage.setItem(STORAGE_KEYS.ownerEmail, loggedInEmail);
     renderOwnerState();
+    renderProducts();
     renderFaqs();
     closeOwnerModal();
-    showModal("Logged In", isOwner() ? "FAQ reply tools are now available." : "You are now logged in for this browsing session.");
+    showModal("Logged In", isOwner() ? "Admin catalog and FAQ tools are now available." : "You are now logged in for this browsing session.");
   });
   qs("#ownerLogout").addEventListener("click", ownerLogout);
   qs("#loginStatus").addEventListener("click", (event) => {
@@ -610,7 +676,6 @@ function init() {
   if (localStorage.getItem(STORAGE_KEYS.theme) === "light") document.body.classList.add("light");
   renderProducts();
   renderPackages();
-  renderBoardingPlans();
   renderReviews();
   renderOwnerState();
   renderFaqs();

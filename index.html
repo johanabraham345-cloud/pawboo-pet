@@ -20,7 +20,7 @@
   <body>
     <div class="announcement">
       <span>Same-day delivery in selected areas</span>
-      <a href="#inquiries" data-route="inquiries">Book grooming or ask for product availability</a>
+      <a href="#inquiries" data-route="inquiries">Request grooming appointment or ask for product availability</a>
     </div>
 
     <header class="site-header">
@@ -37,7 +37,6 @@
       <nav class="site-nav" aria-label="Primary navigation">
         <a href="#shop" data-route="shop">Shop</a>
         <a href="#grooming" data-route="grooming">Grooming</a>
-        <a href="#boarding" data-route="boarding">Pet Boarding</a>
         <a href="#reviews" data-route="reviews">Reviews</a>
         <a href="#location" data-route="location">Location</a>
         <a href="#faq" data-route="faq">FAQ</a>
@@ -65,7 +64,7 @@
           </p>
           <div class="hero-actions">
             <a class="btn primary" href="#shop" data-route="shop">Shop Products</a>
-            <a class="btn ghost" href="#grooming" data-route="grooming">Book Grooming</a>
+            <a class="btn ghost" href="#grooming" data-route="grooming">Grooming Appointment</a>
           </div>
           <div class="hero-stats" aria-label="Store highlights">
             <span><strong>34</strong> Live Products</span>
@@ -88,11 +87,6 @@
         </article>
         <article>
           <span>03</span>
-          <h2>Pet Boarding</h2>
-          <p>Safe, class-care overnight and multi-day stays for dogs and cats while you travel.</p>
-        </article>
-        <article>
-          <span>04</span>
           <h2>Nutrition Help</h2>
           <p>Ask for breed, age, allergy, and budget-based recommendations.</p>
         </article>
@@ -100,9 +94,9 @@
 
       <section class="section shop-section" id="shop">
         <div class="section-heading">
-          <p class="eyebrow">Editable Catalog</p>
+          <p class="eyebrow">Product Catalog</p>
           <h2>Shop Hypermarket</h2>
-          <p>Real Pawboo product photos are loaded from your image folder. Product names and prices are based on the image filenames.</p>
+          <p>Browse Pawboo products, add items to cart, and send your selected order directly on WhatsApp.</p>
         </div>
 
         <div class="shop-tools">
@@ -119,59 +113,16 @@
             <button type="button" data-filter="toy">Toys</button>
             <button type="button" data-filter="bird">Bird</button>
           </div>
-          <button class="btn compact" id="resetCatalog" type="button">Reset Catalog</button>
+          <div class="admin-catalog-actions hidden" id="adminCatalogActions">
+            <button class="btn compact primary" id="addProductOpen" type="button">Add Product</button>
+            <button class="btn compact" id="resetCatalog" type="button">Reset Catalog</button>
+          </div>
         </div>
 
         <div class="product-grid" id="productGrid" aria-live="polite"></div>
         <div class="product-more">
           <p id="productCountText"></p>
           <button class="btn compact" id="productMoreBtn" type="button">See more products</button>
-        </div>
-      </section>
-
-      <section class="section boarding-section" id="boarding">
-        <div class="section-heading">
-          <p class="eyebrow">Premium Pet Care</p>
-          <h2>Pet Boarding</h2>
-          <p>Heading out of town or have a packed work week? Drop your furry family member with us. Pawboo's boarding service provides a safe, loving, and hygienic home-away-from-home with trained caretakers available around the clock.</p>
-        </div>
-
-        <div class="boarding-layout">
-          <div class="boarding-image" aria-label="Comfortable pet boarding facility at Pawboo"></div>
-          <div class="boarding-right">
-            <div class="boarding-highlights">
-              <div class="boarding-highlight-item">
-                <span class="boarding-icon">🏠</span>
-                <div>
-                  <strong>Home-Like Environment</strong>
-                  <p>Spacious, air-conditioned enclosures designed for comfort — not just containment.</p>
-                </div>
-              </div>
-              <div class="boarding-highlight-item">
-                <span class="boarding-icon">🍽️</span>
-                <div>
-                  <strong>Personalised Meal Plans</strong>
-                  <p>We feed your pet their own food on their own schedule. Special dietary needs are accommodated.</p>
-                </div>
-              </div>
-              <div class="boarding-highlight-item">
-                <span class="boarding-icon">🩺</span>
-                <div>
-                  <strong>Health Monitoring</strong>
-                  <p>Pets are checked daily. In case of any concern, our team contacts you immediately.</p>
-                </div>
-              </div>
-              <div class="boarding-highlight-item">
-                <span class="boarding-icon">📸</span>
-                <div>
-                  <strong>Daily Updates</strong>
-                  <p>We send photos and updates on WhatsApp so you can travel with peace of mind.</p>
-                </div>
-              </div>
-            </div>
-            <div class="boarding-plans" id="boardingPlans"></div>
-            <a class="btn primary" href="#inquiries" data-route="inquiries">Book a Boarding Slot</a>
-          </div>
         </div>
       </section>
 
@@ -280,7 +231,6 @@
                 <select name="need">
                   <option>Product Availability</option>
                   <option>Grooming Appointment</option>
-                  <option>Pet Boarding Booking</option>
                   <option>Home Delivery</option>
                   <option>Nutrition Advice</option>
                   <option>Bulk Order</option>
@@ -365,6 +315,35 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="modal" id="addProductModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <form class="modal-card add-product-card" id="addProductForm">
+        <button class="icon-btn modal-close" id="addProductClose" type="button" aria-label="Close add product">x</button>
+        <p class="eyebrow">Admin Catalog</p>
+        <h2>Add Product</h2>
+        <div class="form-row">
+          <label>Title<input name="name" type="text" required /></label>
+          <label>Price<input name="price" type="number" min="0" placeholder="Leave empty for Ask price" /></label>
+        </div>
+        <div class="form-row">
+          <label>Category
+            <select name="category">
+              <option value="food">Food</option>
+              <option value="treats">Treats</option>
+              <option value="grooming">Grooming</option>
+              <option value="accessory">Accessories</option>
+              <option value="toy">Toys</option>
+              <option value="bird">Bird</option>
+            </select>
+          </label>
+          <label>Status<input name="stock" type="text" value="In Stock" required /></label>
+        </div>
+        <label class="login-field">Cover Image<input id="newProductImage" name="imageFile" type="file" accept="image/*" /></label>
+        <label class="login-field">Image URL<input name="imageUrl" type="url" placeholder="Optional if no file is uploaded" /></label>
+        <label class="login-field">Description<textarea name="description" rows="4" placeholder="Short product description for the product popup..." required></textarea></label>
+        <button class="btn primary full" type="submit">Save Product</button>
+      </form>
     </div>
 
     <script type="application/ld+json">

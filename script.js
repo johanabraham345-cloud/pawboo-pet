@@ -1,50 +1,28 @@
-const STORE_PHONE = "919000000000";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBKGcUowpHexvRT1nvQS_bV0Qcie4AZaig",
+  authDomain: "pawboo.firebaseapp.com",
+  projectId: "pawboo",
+  storageBucket: "pawboo.firebasestorage.app",
+  messagingSenderId: "293393938296",
+  appId: "1:293393938296:web:70e4c998594571bcc47a8d"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const STORE_PHONE = "919072556363";
 const MAP_QUERY = "Pawboo Pets";
 const OWNER_EMAIL = "johanabraham345@gmail.com";
 const STORAGE_KEYS = {
-  products: "pawbooProductsV2",
   cart: "pawbooCartV2",
-  faqs: "pawbooFaqsV2",
   theme: "pawbooTheme",
   ownerEmail: "pawbooOwnerEmail"
 };
-
-const defaultProducts = [
-  product("bio-froom-fluffy-puppu-tear-free-1500", "Bio Froom Fluffy Puppu Tear Free", "grooming", 1500, "assets/products/bio-froom-fluffy-puppu-tear-free-1500.webp", "Shampoo"),
-  product("bio-groom-facial-cleanser-1500", "Bio Groom Facial Cleanser", "grooming", 1500, "assets/products/bio-groom-facial-cleanser-1500.webp", "Face Care"),
-  product("bio-groom-gentle-hypo-1400", "Bio Groom Gentle Hypo", "grooming", 1400, "assets/products/bio-groom-gentle-hypo-1400.webp", "Sensitive Skin"),
-  product("bio-groom-natural-oatmeal-1300", "Bio Groom Natural Oatmeal", "grooming", 1300, "assets/products/bio-groom-natural-oatmeal-1300.webp", "Coat Care"),
-  product("bio-groom-waterless-bath-1200", "Bio Groom Waterless Bath", "grooming", 1200, "assets/products/bio-groom-waterless-bath-1200.webp", "No-Rinse"),
-  product("black-tuxedo-bandana-320", "Black Tuxedo Bandana", "accessory", 320, "assets/products/black-tuxedo-bandana-320.webp", "Style"),
-  product("chicken-in-jelly-599", "Chicken in Jelly", "food", 599, "assets/products/chicken-in-jelly-599.webp", "Cat Food"),
-  product("chicken-in-tuna-799", "Chicken in Tuna", "food", 799, "assets/products/chicken-in-tuna-799.webp", "Cat Food"),
-  product("chip-chops-chicken-strips-660", "Chip Chops Chicken Strips", "treats", 660, "assets/products/chip-chops-chicken-strips-660.webp", "Dog Treat"),
-  product("chip-chops-chicken-tenders-660", "Chip Chops Chicken Tenders", "treats", 660, "assets/products/chip-chops-chicken-tenders-660.webp", "Dog Treat"),
-  product("chip-chops-dried-chicken-jerky-660", "Chip Chops Dried Chicken Jerky", "treats", 660, "assets/products/chip-chops-dried-chicken-jerky-660.webp", "Dog Treat"),
-  product("chip-chops-fish-on-stick", "Chip Chops Fish on Stick", "treats", null, "assets/products/chip-chops-fish-on-stick.jpg", "Ask Price"),
-  product("dog-bow-tuxedo-290", "Dog Bow Tuxedo", "accessory", 290, "assets/products/dog-bow-tuxedo-290.jpg", "Style"),
-  product("dog-o-bow-floral-dog-shirt-1199", "Dog-O-Bow Floral Dog Shirt", "accessory", 1199, "assets/products/dog-o-bow-floral-dog-shirt-1199.jpg", "Apparel"),
-  product("flexi-new-neon-retractable-leash", "Flexi New Neon Retractable Leash", "accessory", null, "assets/products/flexi-new-neon-retractable-leash.jpg", "Ask Price"),
-  product("fofo-plush-toys-350", "Fofo Plush Toys", "toy", 350, "assets/products/fofo-plush-toys-350.webp", "Toy"),
-  product("gravy-chunks-roasted-duck-chicken-liver-90", "Gravy Chunks Roasted Duck, Chicken and Liver", "food", 90, "assets/products/gravy-chunks-roasted-duck-chicken-liver-90.webp", "Wet Food"),
-  product("jibss-kennel-hygiene-floor-cleaner-440", "Jibss Kennel Hygiene Floor Cleaner", "grooming", 440, "assets/products/jibss-kennel-hygiene-floor-cleaner-440-different-colour-variants.webp", "Variants"),
-  product("lamb-with-chicken-799", "Lamb with Chicken", "food", 799, "assets/products/lamb-with-chicken-799.webp", "Cat Food"),
-  product("lozalo-privilege-shampoo", "Lozalo Privilege Shampoo", "grooming", null, "assets/products/lozalo-privilege-shampoo.jpg", "Ask Price"),
-  product("me-o-cat-food-dry-ocean-fish-880", "Me-O Cat Food Dry Ocean Fish", "food", 880, "assets/products/me-o-cat-food-dry-ocean-fish-880.webp", "Cat Food"),
-  product("me-o-cat-food-dry-persian-cat-550", "Me-O Cat Food Dry Persian Cat", "food", 550, "assets/products/me-o-cat-food-dry-persian-cat-550.webp", "Cat Food"),
-  product("me-o-ocean-fish-cat-dry-1100", "Me-O Ocean Fish Cat Dry", "food", 1100, "assets/products/me-o-ocean-fish-cat-dry-1100.webp", "Cat Food"),
-  product("nylon-chey-bones-250", "Nylon Chew Bones", "toy", 250, "assets/products/nylon-chey-bones-250.webp", "Chew Toy"),
-  product("parrot-vital-pellet-herbal-99", "Parrot Vital Pellet Herbal", "bird", 99, "assets/products/parrot-vital-pellet-herbal-99.webp", "Bird Food"),
-  product("persian-adult-599", "Persian Adult", "food", 599, "assets/products/persian-adult-599.webp", "Cat Food"),
-  product("persian-kitten-399", "Persian Kitten", "food", 399, "assets/products/persian-kitten-399.jpg", "Kitten Food"),
-  product("purina-felix-friskies-dry-350", "Purina Felix Friskies Dry", "food", 350, "assets/products/purina-felix-friskies-dry-350.webp", "Cat Food"),
-  product("purina-felix-matisse-salmon-chicken-990", "Purina Felix Matisse Salmon and Chicken", "food", 990, "assets/products/purina-felix-matisse-salmon-chicken-990.webp", "Cat Food"),
-  product("purina-felix-pouch-felix-kitten-pouches", "Purina Felix Kitten Pouches", "food", null, "assets/products/purina-felix-pouch-felix-kitten-pouches.webp", "Ask Price"),
-  product("roested-ducks-3499", "Roasted Ducks", "food", 3499, "assets/products/roested-ducks-3499.webp", "Premium Food"),
-  product("royal-blue-red-tartan-plaid-bandana-699", "Royal Blue and Red Tartan Plaid Bandana", "accessory", 699, "assets/products/royal-blue-red-tartan-plaid-bandana-699.webp", "Style"),
-  product("trixie-premium-nylon-rope-leashes-995", "Trixie Premium Nylon and Rope Leashes", "accessory", 995, "assets/products/trixie-premium-nylon-rope-leashes-995.jpg", "Leash"),
-  product("tropiclean-pet-shampoo-2-in-1", "TropiClean Pet Shampoo 2-in-1", "grooming", null, "assets/products/tropiclean-pet-shampoo-2-in-1.jpg", "Ask Price")
-];
 
 const packages = [
   { name: "Essential Bath", price: 799, text: "Bath, brush, blow dry, ear cleaning, and fragrance finish." },
@@ -80,15 +58,9 @@ const defaultReviews = [
   }
 ];
 
-const defaultFaqs = [
-  { q: "Do you offer home delivery?", a: "Yes. Share your location and product list through WhatsApp for confirmation." },
-  { q: "Can I request a grooming appointment online?", a: "Yes. Use the grooming buttons or inquiry form and the team will confirm a slot." },
-  { q: "Can you suggest food for allergies?", a: "Yes. Mention breed, age, current food, and allergy signs in the inquiry form." }
-];
-
-let products = load(STORAGE_KEYS.products, defaultProducts);
+let products = [];
 let cart = load(STORAGE_KEYS.cart, []);
-let faqs = load(STORAGE_KEYS.faqs, defaultFaqs);
+let faqs = [];
 let currentFilter = "all";
 let loggedInEmail = localStorage.getItem(STORAGE_KEYS.ownerEmail) || "";
 let activeProductId = "";
@@ -100,11 +72,8 @@ const rupee = (value) => value === null || Number.isNaN(Number(value))
   ? "Ask price"
   : `Rs ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(Number(value))}`;
 
-function product(id, name, category, price, image, stock) {
-  return { id, name, category, price, image, stock };
-}
-
 function escapeHtml(value) {
+  if (!value) return "";
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
@@ -174,6 +143,26 @@ function getProductDescription(productItem) {
     bird: "A bird-care product stocked for daily nutrition and care. Confirm suitability for your bird type before purchase."
   };
   return descriptions[productItem.category] || "A Pawboo catalog product. Ask the team for current stock, variants, and recommendations.";
+}
+
+async function fetchProducts() {
+  try {
+    const querySnapshot = await getDocs(collection(db, "products"));
+    products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderProducts();
+  } catch (err) {
+    console.error("Failed to load products from Firebase", err);
+  }
+}
+
+async function fetchFaqs() {
+  try {
+    const querySnapshot = await getDocs(collection(db, "faqs"));
+    faqs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderFaqs();
+  } catch (err) {
+    console.error("Failed to load FAQs from Firebase", err);
+  }
 }
 
 function renderProducts() {
@@ -267,15 +256,15 @@ function renderReviews() {
 }
 
 function renderFaqs() {
-  qs("#faqList").innerHTML = faqs.map((item, index) => `
+  qs("#faqList").innerHTML = faqs.map((item) => `
     <article class="faq-item">
-      <strong>${index + 1}. ${escapeHtml(item.q)}</strong>
-      <p>${escapeHtml(item.a)}</p>
-      <form class="faq-answer-form ${isOwner() ? "" : "hidden"}" data-faq-index="${index}">
-        <textarea name="answer" rows="3" aria-label="Reply to ${escapeHtml(item.q)}">${escapeHtml(item.a)}</textarea>
+      <strong>${escapeHtml(item.question)}</strong>
+      <p>${escapeHtml(item.answer)}</p>
+      <form class="faq-answer-form ${isOwner() ? "" : "hidden"}" data-faq-id="${item.id}">
+        <textarea name="answer" rows="3" aria-label="Reply to ${escapeHtml(item.question)}">${escapeHtml(item.answer)}</textarea>
         <div class="faq-owner-actions">
           <button class="btn compact" type="submit">Save Answer</button>
-          <button class="btn compact danger" type="button" data-delete-faq="${index}">Delete Question</button>
+          <button class="btn compact danger" type="button" data-delete-faq="${item.id}">Delete Question</button>
         </div>
       </form>
     </article>
@@ -290,7 +279,7 @@ function renderOwnerState() {
 
   if (isOwner()) {
     status.innerHTML = `
-      <span>Logged in as ${escapeHtml(loggedInEmail)}. Admin catalog and FAQ tools are available.</span>
+      <span>Logged in as admin. Admin catalog and FAQ tools are available.</span>
       <button class="btn compact" id="faqOwnerLogout" type="button">Logout</button>
     `;
     ownerButton.textContent = "Account";
@@ -384,6 +373,7 @@ function closeProductModal() {
 
 function openOwnerModal() {
   qs("#ownerEmailInput").value = loggedInEmail;
+  qs("#ownerPasswordInput").value = "";
   qs("#ownerModal").classList.add("open");
   qs("#ownerModal").setAttribute("aria-hidden", "false");
 }
@@ -396,6 +386,9 @@ function closeOwnerModal() {
 function openAddProductModal() {
   if (!isOwner()) return;
   qs("#addProductForm").reset();
+  qs("#imagePreview").src = "";
+  qs("#imagePreview").classList.add("hidden");
+  qs(".upload-placeholder").classList.remove("hidden");
   qs("#addProductModal").classList.add("open");
   qs("#addProductModal").setAttribute("aria-hidden", "false");
 }
@@ -403,15 +396,6 @@ function openAddProductModal() {
 function closeAddProductModal() {
   qs("#addProductModal").classList.remove("open");
   qs("#addProductModal").setAttribute("aria-hidden", "true");
-}
-
-function ownerLogout() {
-  loggedInEmail = "";
-  localStorage.removeItem(STORAGE_KEYS.ownerEmail);
-  renderOwnerState();
-  renderProducts();
-  renderFaqs();
-  closeOwnerModal();
 }
 
 function syncRoute() {
@@ -456,7 +440,7 @@ function initEvents() {
     });
   });
 
-  qs("#productGrid").addEventListener("click", (event) => {
+  qs("#productGrid").addEventListener("click", async (event) => {
     const addButton = event.target.closest("[data-add]");
     const editButton = event.target.closest("[data-edit]");
     const deleteButton = event.target.closest("[data-delete-product]");
@@ -472,12 +456,18 @@ function initEvents() {
     }
     if (deleteButton) {
       if (!isOwner()) return;
-      products = products.filter((productItem) => productItem.id !== deleteButton.dataset.deleteProduct);
-      cart = cart.filter((item) => item.id !== deleteButton.dataset.deleteProduct);
-      save(STORAGE_KEYS.products, products);
-      renderProducts();
-      renderCart();
-      showModal("Product Removed", "The product has been removed from this browser catalog.");
+      const id = deleteButton.dataset.deleteProduct;
+      try {
+        await deleteDoc(doc(db, "products", id));
+        products = products.filter((productItem) => productItem.id !== id);
+        cart = cart.filter((item) => item.id !== id);
+        save(STORAGE_KEYS.cart, cart);
+        renderProducts();
+        renderCart();
+        showModal("Product Removed", "The product has been deleted from Firebase.");
+      } catch (err) {
+        showModal("Error", "Could not delete product.");
+      }
       return;
     }
     if (card && !event.target.closest("form, input, textarea, select")) openProductModal(card.dataset.id);
@@ -490,39 +480,54 @@ function initEvents() {
     openProductModal(card.dataset.id);
   });
 
-  qs("#productGrid").addEventListener("submit", (event) => {
+  qs("#productGrid").addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!isOwner()) return;
     const form = event.target;
     const id = form.dataset.form;
     const formData = new FormData(form);
     const priceValue = formData.get("price").trim();
-    products = products.map((productItem) => productItem.id === id ? {
-      ...productItem,
+    
+    const updatedProduct = {
       name: formData.get("name").trim(),
       price: priceValue === "" ? null : Number(priceValue),
       stock: formData.get("stock").trim(),
       category: formData.get("category").trim().toLowerCase(),
       image: formData.get("image").trim(),
       description: formData.get("description").trim()
-    } : productItem);
-    save(STORAGE_KEYS.products, products);
-    renderProducts();
-    showModal("Product Updated", "Your catalog change has been saved in this browser.");
+    };
+
+    try {
+      await updateDoc(doc(db, "products", id), updatedProduct);
+      products = products.map((productItem) => productItem.id === id ? { id, ...updatedProduct } : productItem);
+      renderProducts();
+      showModal("Product Updated", "Your catalog change has been saved to Firebase.");
+    } catch (err) {
+      showModal("Error", "Could not update product.");
+    }
   });
 
-  qs("#resetCatalog").addEventListener("click", () => {
+  qs("#resetCatalog")?.addEventListener("click", () => {
     if (!isOwner()) return;
-    products = structuredClone(defaultProducts);
-    save(STORAGE_KEYS.products, products);
-    renderProducts();
+    showModal("Notice", "Resetting the catalog is disabled in the Firebase version. You must delete and recreate items manually.");
   });
 
-  qs("#addProductOpen").addEventListener("click", openAddProductModal);
+  qs("#addProductOpen")?.addEventListener("click", openAddProductModal);
   qs("#addProductClose").addEventListener("click", closeAddProductModal);
   qs("#addProductModal").addEventListener("click", (event) => {
     if (event.target.id === "addProductModal") closeAddProductModal();
   });
+  
+  qs("#newProductImage").addEventListener("change", async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const dataUrl = await readImageFile(file);
+      qs("#imagePreview").src = dataUrl;
+      qs("#imagePreview").classList.remove("hidden");
+      qs(".upload-placeholder").classList.add("hidden");
+    }
+  });
+
   qs("#addProductForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!isOwner()) return;
@@ -532,8 +537,9 @@ function initEvents() {
     const priceValue = formData.get("price").trim();
     const uploadedImage = await readImageFile(qs("#newProductImage").files[0]);
     const imageUrl = uploadedImage || formData.get("imageUrl").trim() || "https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8?auto=format&fit=crop&w=900&q=80";
+    
+    const newId = createProductId(name);
     const newProduct = {
-      id: createProductId(name),
       name,
       category: formData.get("category"),
       price: priceValue === "" ? null : Number(priceValue),
@@ -541,12 +547,17 @@ function initEvents() {
       image: imageUrl,
       description: formData.get("description").trim()
     };
-    products.unshift(newProduct);
-    productsExpanded = true;
-    save(STORAGE_KEYS.products, products);
-    renderProducts();
-    closeAddProductModal();
-    showModal("Product Added", "The new product has been added to this browser catalog.");
+
+    try {
+      await setDoc(doc(db, "products", newId), newProduct);
+      products.unshift({ id: newId, ...newProduct });
+      productsExpanded = true;
+      renderProducts();
+      closeAddProductModal();
+      showModal("Product Added", "The new product has been saved to Firebase.");
+    } catch (err) {
+      showModal("Error", "Could not add product.");
+    }
   });
 
   qs("#packageList").addEventListener("click", (event) => {
@@ -555,40 +566,54 @@ function initEvents() {
     window.open(createWhatsAppLink(`Hi Pawboo, I want an appointment for the ${button.dataset.appointment} grooming package.`), "_blank");
   });
 
-  qs("#faqForm").addEventListener("submit", (event) => {
+  qs("#faqForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     const input = qs("#faqInput");
     const question = input.value.trim();
-    faqs.unshift({ q: question, a: "Thanks for asking. Pawboo team will answer this shortly." });
-    save(STORAGE_KEYS.faqs, faqs);
-    input.value = "";
-    renderFaqs();
-    window.location.href = createMailLink("New Pawboo FAQ Question", `A customer asked:\n\n${question}\n\nThe team can reply from the Pawboo website.`);
-    showModal("Question Sent", `Your question has been prepared as an email to ${OWNER_EMAIL}.`);
+    
+    try {
+      const docRef = await addDoc(collection(db, "faqs"), { question, answer: "Thanks for asking. Pawboo team will answer this shortly." });
+      faqs.unshift({ id: docRef.id, question: question, answer: "Thanks for asking. Pawboo team will answer this shortly." });
+      input.value = "";
+      renderFaqs();
+      window.location.href = createMailLink("New Pawboo FAQ Question", `A customer asked:\n\n${question}\n\nThe team can reply from the Pawboo website.`);
+      showModal("Question Sent", `Your question has been saved to Firebase and emailed to ${OWNER_EMAIL}.`);
+    } catch (err) {
+      showModal("Error", "Could not save question.");
+    }
   });
 
-  qs("#faqList").addEventListener("submit", (event) => {
+  qs("#faqList").addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!isOwner()) return;
     const form = event.target;
-    const index = Number(form.dataset.faqIndex);
+    const id = form.dataset.faqId;
     const answer = new FormData(form).get("answer").trim();
-    if (!faqs[index]) return;
-    faqs[index].a = answer;
-    save(STORAGE_KEYS.faqs, faqs);
-    renderFaqs();
-    showModal("Answer Saved", "The FAQ answer has been updated on this browser.");
+    
+    try {
+      await updateDoc(doc(db, "faqs", id), { answer });
+      const faq = faqs.find(f => f.id == id);
+      if (faq) faq.answer = answer;
+      renderFaqs();
+      showModal("Answer Saved", "The FAQ answer has been updated in Firebase.");
+    } catch(err) {
+      showModal("Error", "Could not update FAQ answer.");
+    }
   });
 
-  qs("#faqList").addEventListener("click", (event) => {
+  qs("#faqList").addEventListener("click", async (event) => {
     const deleteButton = event.target.closest("[data-delete-faq]");
     if (!deleteButton || !isOwner()) return;
-    const index = Number(deleteButton.dataset.deleteFaq);
-    if (!faqs[index]) return;
-    faqs.splice(index, 1);
-    save(STORAGE_KEYS.faqs, faqs);
-    renderFaqs();
-    showModal("Question Deleted", "The FAQ question has been removed on this browser.");
+    const id = deleteButton.dataset.deleteFaq;
+    
+    try {
+      await deleteDoc(doc(db, "faqs", id));
+      faqs = faqs.filter(f => f.id != id);
+      renderFaqs();
+      showModal("Question Deleted", "The FAQ question has been removed from Firebase.");
+    } catch(err) {
+      showModal("Error", "Could not delete FAQ.");
+    }
   });
 
   qs("#inquiryForm").addEventListener("submit", (event) => {
@@ -629,24 +654,49 @@ function initEvents() {
   const mapLink = qs("#mapLink");
   if (mapLink) mapLink.href = mapUrl;
   qs("#whatsappQuick").href = createWhatsAppLink("Hi Pawboo, I need help with products or grooming.");
+  
   qs("#ownerLoginOpen").addEventListener("click", openOwnerModal);
   qs("#ownerModalClose").addEventListener("click", closeOwnerModal);
-  qs("#ownerLoginForm").addEventListener("submit", (event) => {
+  
+  qs("#ownerLoginForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-    const submittedEmail = qs("#ownerEmailInput").value.trim().toLowerCase();
-    loggedInEmail = submittedEmail;
-    localStorage.setItem(STORAGE_KEYS.ownerEmail, loggedInEmail);
-    renderOwnerState();
-    renderProducts();
-    renderFaqs();
-    closeOwnerModal();
-    showModal("Logged In", isOwner() ? "Admin catalog and FAQ tools are now available." : "You are now logged in for this browsing session.");
+    const email = qs("#ownerEmailInput").value.trim().toLowerCase();
+    const password = qs("#ownerPasswordInput").value.trim();
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      loggedInEmail = userCredential.user.email;
+      localStorage.setItem(STORAGE_KEYS.ownerEmail, loggedInEmail);
+      renderOwnerState();
+      renderProducts();
+      renderFaqs();
+      closeOwnerModal();
+      showModal("Logged In", "Admin catalog and FAQ tools are now available.");
+    } catch (err) {
+      console.error(err);
+      showModal("Login Failed", "Invalid email or password.");
+    }
   });
-  qs("#ownerLogout").addEventListener("click", ownerLogout);
+
+  qs("#ownerLogout").addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+      loggedInEmail = "";
+      localStorage.removeItem(STORAGE_KEYS.ownerEmail);
+      renderOwnerState();
+      renderProducts();
+      renderFaqs();
+      closeOwnerModal();
+    } catch (err) {
+      console.error(err);
+    }
+  });
+  
   qs("#loginStatus").addEventListener("click", (event) => {
     if (event.target.id === "faqOwnerLogin") openOwnerModal();
-    if (event.target.id === "faqOwnerLogout") ownerLogout();
+    if (event.target.id === "faqOwnerLogout") qs("#ownerLogout").click();
   });
+  
   qs("#modalClose").addEventListener("click", closeModal);
   qs("#modalOk").addEventListener("click", closeModal);
   qs("#successModal").addEventListener("click", (event) => {
@@ -674,11 +724,24 @@ function initEvents() {
 
 function init() {
   if (localStorage.getItem(STORAGE_KEYS.theme) === "light") document.body.classList.add("light");
-  renderProducts();
+  
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      loggedInEmail = user.email;
+      localStorage.setItem(STORAGE_KEYS.ownerEmail, loggedInEmail);
+    } else {
+      loggedInEmail = "";
+      localStorage.removeItem(STORAGE_KEYS.ownerEmail);
+    }
+    renderOwnerState();
+    renderProducts();
+    renderFaqs();
+  });
+
+  fetchProducts();
+  fetchFaqs();
   renderPackages();
   renderReviews();
-  renderOwnerState();
-  renderFaqs();
   renderCart();
   initEvents();
   syncRoute();

@@ -355,9 +355,9 @@ body.light .site-header {
 
 /* Sections & Typography */
 .section {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 80px 24px;
+  padding: 80px 40px;
 }
 
 .section-heading {
@@ -389,65 +389,71 @@ body.light .site-header {
 
 /* Hero Section */
 .hero {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 60px 24px;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 60px;
-  align-items: center;
+  position: relative;
+  min-height: 86vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  padding: 110px clamp(18px, 5vw, 72px) 64px;
 }
 
 .hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
   animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .hero-content h1 {
-  font-size: 56px;
-  line-height: 1.1;
+  font-size: clamp(42px, 8vw, 96px);
+  line-height: 0.95;
   font-weight: 800;
-  letter-spacing: -2px;
-  margin-bottom: 24px;
+  letter-spacing: 0;
+  margin-bottom: 16px;
+  color: #fff;
 }
 
 .hero-copy {
+  max-width: 660px;
   font-size: 18px;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 32px;
 }
 
 .hero-actions {
   display: flex;
   gap: 16px;
+  justify-content: flex-start;
   margin-bottom: 40px;
 }
 
 .hero-stats {
   display: flex;
-  gap: 24px;
+  gap: 32px;
+  justify-content: flex-start;
   padding-top: 32px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .hero-stats span {
   font-size: 13px;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .hero-stats strong {
   display: block;
   font-size: 24px;
   font-weight: 700;
-  color: var(--text);
+  color: #fff;
   margin-bottom: 4px;
 }
 
 .hero-media {
-  aspect-ratio: 4/5;
-  border-radius: var(--radius-lg);
-  background: url('https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?auto=format&fit=crop&w=1000&q=80') center/cover;
-  box-shadow: var(--shadow-md);
-  animation: fadeIn 1.2s ease forwards;
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(16, 17, 20, 0.94), rgba(16, 17, 20, 0.66), rgba(16, 17, 20, 0.2)),
+    url("https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?auto=format&fit=crop&w=1800&q=85") center/cover;
 }
 
 /* Service Strip */

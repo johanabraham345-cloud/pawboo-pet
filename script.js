@@ -85,7 +85,7 @@ let faqs = [];
 let currentFilter = "all";
 let loggedInEmail = localStorage.getItem(STORAGE_KEYS.ownerEmail) || "";
 let activeProductId = "";
-let productsExpanded = false;
+let productsLimit = 12;
 
 const qs = (selector) => document.querySelector(selector);
 const qsa = (selector) => [...document.querySelectorAll(selector)];
@@ -213,9 +213,7 @@ function renderProducts() {
     const matchesFilter = currentFilter === "all" || productItem.category === currentFilter;
     return matchesFilter && searchText.includes(term);
   });
-  const isCompactView = window.matchMedia("(max-width: 620px)").matches;
-  const previewLimit = isCompactView ? 6 : 12;
-  const visibleProducts = productsExpanded ? filtered : filtered.slice(0, previewLimit);
+  const visibleProducts = filtered.slice(0, productsLimit);
 
   qs("#adminCatalogActions").classList.toggle("hidden", !isOwner());
 
@@ -265,9 +263,9 @@ function renderProducts() {
   const moreWrap = qs(".product-more");
   const moreButton = qs("#productMoreBtn");
   const countText = qs("#productCountText");
-  const hasMore = filtered.length > previewLimit;
+  const hasMore = filtered.length > productsLimit;
   moreWrap.classList.toggle("hidden", !hasMore);
-  moreButton.textContent = productsExpanded ? "Show fewer products" : "See more products";
+  moreButton.textContent = `See ${Math.min(12, Math.max(filtered.length - productsLimit, 0))} more products`;
   countText.textContent = hasMore
     ? `Showing ${visibleProducts.length} of ${filtered.length} products`
     : `${filtered.length} products shown`;
@@ -473,19 +471,18 @@ function initEvents() {
   });
 
   qs("#productSearch").addEventListener("input", () => {
-    productsExpanded = false;
+    productsLimit = 12;
     renderProducts();
   });
   qs("#productMoreBtn").addEventListener("click", () => {
-    productsExpanded = !productsExpanded;
+    productsLimit += 12;
     renderProducts();
-    if (!productsExpanded) qs("#shop").scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
   qsa("[data-filter]").forEach((button) => {
     button.addEventListener("click", () => {
       currentFilter = button.dataset.filter;
-      productsExpanded = false;
+      productsLimit = 12;
       qsa("[data-filter]").forEach((item) => item.classList.remove("active"));
       button.classList.add("active");
       renderProducts();
@@ -604,7 +601,7 @@ function initEvents() {
     try {
       await setDoc(doc(db, "products", newId), newProduct);
       products.unshift({ id: newId, ...newProduct });
-      productsExpanded = true;
+      productsLimit = Math.max(productsLimit, 12);
       renderProducts();
       closeAddProductModal();
       showModal("Product Added", "The new product has been saved to Firebase.");

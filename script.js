@@ -20,7 +20,7 @@ const STORE_PHONE = "919961382604";
 const MAP_QUERY = "Pawboo Pets";
 const OWNER_EMAILS = [
   "johanabraham345@gmail.com",
-  "pjsc06@gmail.com"
+  "xxx@gmail.com"
 ];
 const OWNER_EMAIL = OWNER_EMAILS[0];
 const STORAGE_KEYS = {
@@ -50,10 +50,22 @@ const defaultReviews = [
     photo: "assets/reviews/customer-2-aleena-xavier.png"
   },
   {
+    name: "Sreekanth A",
+    rating: 5,
+    text: "I am buying dog food and pet accessories from Pawboo for the last 3 years. They provide me high quality pet foods and accessories. Their new store near Kaloor is very easy to access. I am a very happy customer of Pawboo.",
+    photo: "assets/reviews/customer-6-sreekanth-a.png"
+  },
+  {
     name: "Treesa",
     rating: 5,
     text: "Took my Lhasa Apso for grooming and loved the experience! The staff were kind and friendly to my dog. They took great care and did a perfect job.",
     photo: "assets/reviews/customer-3-treasa-stimna-cleetus.png"
+  },
+  {
+    name: "Gouri Nandana",
+    rating: 5,
+    text: "Excellent grooming service. My dog came back looking neat, refreshed, and cheerful. The staff were kind and treated my pet very gently.",
+    photo: "assets/reviews/customer-5-gouri-nandana.png"
   },
   {
     name: "Saurabh Sunny",
@@ -90,7 +102,6 @@ let currentFilter = "all";
 let loggedInEmail = localStorage.getItem(STORAGE_KEYS.ownerEmail) || "";
 let activeProductId = "";
 let productsLimit = 12;
-let productsOffset = 0;
 
 const qs = (selector) => document.querySelector(selector);
 const qsa = (selector) => [...document.querySelectorAll(selector)];
@@ -226,8 +237,7 @@ function renderProducts() {
     const matchesFilter = currentFilter === "all" || productItem.category === currentFilter;
     return matchesFilter && searchText.includes(term);
   });
-  if (productsOffset >= filtered.length) productsOffset = 0;
-  const visibleProducts = filtered.slice(productsOffset, productsOffset + productsLimit);
+  const visibleProducts = filtered.slice(0, productsLimit);
 
   qs("#adminCatalogActions").classList.toggle("hidden", !isOwner());
 
@@ -277,11 +287,11 @@ function renderProducts() {
   const moreWrap = qs(".product-more");
   const moreButton = qs("#productMoreBtn");
   const countText = qs("#productCountText");
-  const hasMore = productsOffset + productsLimit < filtered.length;
+  const hasMore = productsLimit < filtered.length;
   moreWrap.classList.toggle("hidden", !hasMore);
-  moreButton.textContent = `See next ${Math.min(12, Math.max(filtered.length - productsOffset - productsLimit, 0))} products`;
+  moreButton.textContent = "See more";
   countText.textContent = hasMore
-    ? `Showing ${productsOffset + 1}-${productsOffset + visibleProducts.length} of ${filtered.length} products`
+    ? `Showing ${visibleProducts.length} of ${filtered.length} products`
     : `${filtered.length} products shown`;
 }
 
@@ -485,18 +495,18 @@ function initEvents() {
   });
 
   qs("#productSearch").addEventListener("input", () => {
-    productsOffset = 0;
+    productsLimit = 12;
     renderProducts();
   });
   qs("#productMoreBtn").addEventListener("click", () => {
-    productsOffset += 12;
+    productsLimit += 12;
     renderProducts();
   });
 
   qsa("[data-filter]").forEach((button) => {
     button.addEventListener("click", () => {
       currentFilter = button.dataset.filter;
-      productsOffset = 0;
+      productsLimit = 12;
       qsa("[data-filter]").forEach((item) => item.classList.remove("active"));
       button.classList.add("active");
       renderProducts();

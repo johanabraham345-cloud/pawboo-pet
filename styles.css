@@ -355,7 +355,7 @@ body.light .site-header {
 
 /* Sections & Typography */
 .section {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 80px 24px;
 }
@@ -389,11 +389,11 @@ body.light .site-header {
 
 /* Hero Section */
 .hero {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 60px 24px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
   gap: 60px;
   align-items: center;
 }
@@ -445,7 +445,7 @@ body.light .site-header {
 .hero-media {
   aspect-ratio: 4/5;
   border-radius: var(--radius-lg);
-  background: url('https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1200&q=80') center/cover;
+  background: url('https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?auto=format&fit=crop&w=1000&q=80') center/cover;
   box-shadow: var(--shadow-md);
   animation: fadeIn 1.2s ease forwards;
 }
@@ -872,14 +872,18 @@ body.light .badge {
 }
 
 .login-status {
-  text-align: center;
-  margin-bottom: 24px;
-  color: var(--muted);
-  font-size: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 16px 24px;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 12px;
+  max-width: 600px;
+  margin: 0 auto 24px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 .faq-list {

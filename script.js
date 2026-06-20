@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -13,16 +13,55 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
 const db = getFirestore(app);
 
 const STORE_PHONE = "919072556363";
 const MAP_QUERY = "Pawboo Pets";
 const OWNER_EMAIL = "johanabraham345@gmail.com";
+const ADMIN_EMAILS = [OWNER_EMAIL];
 const STORAGE_KEYS = {
   cart: "pawbooCartV2",
   theme: "pawbooTheme",
   ownerEmail: "pawbooOwnerEmail"
 };
+
+const defaultProducts = [
+  { id: "bio-froom-fluffy-puppu-tear-free-1500", name: "Bio Froom Fluffy Puppu Tear Free", category: "grooming", price: 1500, image: "assets/products/bio-froom-fluffy-puppu-tear-free-1500.webp", stock: "Shampoo" },
+  { id: "bio-groom-facial-cleanser-1500", name: "Bio Groom Facial Cleanser", category: "grooming", price: 1500, image: "assets/products/bio-groom-facial-cleanser-1500.webp", stock: "Face Care" },
+  { id: "bio-groom-gentle-hypo-1400", name: "Bio Groom Gentle Hypo", category: "grooming", price: 1400, image: "assets/products/bio-groom-gentle-hypo-1400.webp", stock: "Sensitive Skin" },
+  { id: "bio-groom-natural-oatmeal-1300", name: "Bio Groom Natural Oatmeal", category: "grooming", price: 1300, image: "assets/products/bio-groom-natural-oatmeal-1300.webp", stock: "Coat Care" },
+  { id: "bio-groom-waterless-bath-1200", name: "Bio Groom Waterless Bath", category: "grooming", price: 1200, image: "assets/products/bio-groom-waterless-bath-1200.webp", stock: "No-Rinse" },
+  { id: "black-tuxedo-bandana-320", name: "Black Tuxedo Bandana", category: "accessory", price: 320, image: "assets/products/black-tuxedo-bandana-320.webp", stock: "Style" },
+  { id: "chicken-in-jelly-599", name: "Chicken in Jelly", category: "food", price: 599, image: "assets/products/chicken-in-jelly-599.webp", stock: "Cat Food" },
+  { id: "chicken-in-tuna-799", name: "Chicken in Tuna", category: "food", price: 799, image: "assets/products/chicken-in-tuna-799.webp", stock: "Cat Food" },
+  { id: "chip-chops-chicken-strips-660", name: "Chip Chops Chicken Strips", category: "treats", price: 660, image: "assets/products/chip-chops-chicken-strips-660.webp", stock: "Dog Treat" },
+  { id: "chip-chops-chicken-tenders-660", name: "Chip Chops Chicken Tenders", category: "treats", price: 660, image: "assets/products/chip-chops-chicken-tenders-660.webp", stock: "Dog Treat" },
+  { id: "chip-chops-dried-chicken-jerky-660", name: "Chip Chops Dried Chicken Jerky", category: "treats", price: 660, image: "assets/products/chip-chops-dried-chicken-jerky-660.webp", stock: "Dog Treat" },
+  { id: "chip-chops-fish-on-stick", name: "Chip Chops Fish on Stick", category: "treats", price: null, image: "assets/products/chip-chops-fish-on-stick.jpg", stock: "Ask Price" },
+  { id: "dog-bow-tuxedo-290", name: "Dog Bow Tuxedo", category: "accessory", price: 290, image: "assets/products/dog-bow-tuxedo-290.jpg", stock: "Style" },
+  { id: "dog-o-bow-floral-dog-shirt-1199", name: "Dog-O-Bow Floral Dog Shirt", category: "accessory", price: 1199, image: "assets/products/dog-o-bow-floral-dog-shirt-1199.jpg", stock: "Apparel" },
+  { id: "flexi-new-neon-retractable-leash", name: "Flexi New Neon Retractable Leash", category: "accessory", price: null, image: "assets/products/flexi-new-neon-retractable-leash.jpg", stock: "Ask Price" },
+  { id: "fofo-plush-toys-350", name: "Fofo Plush Toys", category: "toy", price: 350, image: "assets/products/fofo-plush-toys-350.webp", stock: "Toy" },
+  { id: "gravy-chunks-roasted-duck-chicken-liver-90", name: "Gravy Chunks Roasted Duck, Chicken and Liver", category: "food", price: 90, image: "assets/products/gravy-chunks-roasted-duck-chicken-liver-90.webp", stock: "Wet Food" },
+  { id: "jibss-kennel-hygiene-floor-cleaner-440", name: "Jibss Kennel Hygiene Floor Cleaner", category: "grooming", price: 440, image: "assets/products/jibss-kennel-hygiene-floor-cleaner-440-different-colour-variants.webp", stock: "Variants" },
+  { id: "lamb-with-chicken-799", name: "Lamb with Chicken", category: "food", price: 799, image: "assets/products/lamb-with-chicken-799.webp", stock: "Cat Food" },
+  { id: "lozalo-privilege-shampoo", name: "Lozalo Privilege Shampoo", category: "grooming", price: null, image: "assets/products/lozalo-privilege-shampoo.jpg", stock: "Ask Price" },
+  { id: "me-o-cat-food-dry-ocean-fish-880", name: "Me-O Cat Food Dry Ocean Fish", category: "food", price: 880, image: "assets/products/me-o-cat-food-dry-ocean-fish-880.webp", stock: "Cat Food" },
+  { id: "me-o-cat-food-dry-persian-cat-550", name: "Me-O Cat Food Dry Persian Cat", category: "food", price: 550, image: "assets/products/me-o-cat-food-dry-persian-cat-550.webp", stock: "Cat Food" },
+  { id: "me-o-ocean-fish-cat-dry-1100", name: "Me-O Ocean Fish Cat Dry", category: "food", price: 1100, image: "assets/products/me-o-ocean-fish-cat-dry-1100.webp", stock: "Cat Food" },
+  { id: "nylon-chey-bones-250", name: "Nylon Chew Bones", category: "toy", price: 250, image: "assets/products/nylon-chey-bones-250.webp", stock: "Chew Toy" },
+  { id: "parrot-vital-pellet-herbal-99", name: "Parrot Vital Pellet Herbal", category: "bird", price: 99, image: "assets/products/parrot-vital-pellet-herbal-99.webp", stock: "Bird Food" },
+  { id: "persian-adult-599", name: "Persian Adult", category: "food", price: 599, image: "assets/products/persian-adult-599.webp", stock: "Cat Food" },
+  { id: "persian-kitten-399", name: "Persian Kitten", category: "food", price: 399, image: "assets/products/persian-kitten-399.jpg", stock: "Kitten Food" },
+  { id: "purina-felix-friskies-dry-350", name: "Purina Felix Friskies Dry", category: "food", price: 350, image: "assets/products/purina-felix-friskies-dry-350.webp", stock: "Cat Food" },
+  { id: "purina-felix-matisse-salmon-chicken-990", name: "Purina Felix Matisse Salmon and Chicken", category: "food", price: 990, image: "assets/products/purina-felix-matisse-salmon-chicken-990.webp", stock: "Cat Food" },
+  { id: "purina-felix-pouch-felix-kitten-pouches", name: "Purina Felix Kitten Pouches", category: "food", price: null, image: "assets/products/purina-felix-pouch-felix-kitten-pouches.webp", stock: "Ask Price" },
+  { id: "roested-ducks-3499", name: "Roasted Ducks", category: "food", price: 3499, image: "assets/products/roested-ducks-3499.webp", stock: "Premium Food" },
+  { id: "royal-blue-red-tartan-plaid-bandana-699", name: "Royal Blue and Red Tartan Plaid Bandana", category: "accessory", price: 699, image: "assets/products/royal-blue-red-tartan-plaid-bandana-699.webp", stock: "Style" },
+  { id: "trixie-premium-nylon-rope-leashes-995", name: "Trixie Premium Nylon and Rope Leashes", category: "accessory", price: 995, image: "assets/products/trixie-premium-nylon-rope-leashes-995.jpg", stock: "Leash" },
+  { id: "tropiclean-pet-shampoo-2-in-1", name: "TropiClean Pet Shampoo 2-in-1", category: "grooming", price: null, image: "assets/products/tropiclean-pet-shampoo-2-in-1.jpg", stock: "Ask Price" }
+];
 
 const packages = [
   { name: "Essential Bath", price: 799, text: "Bath, brush, blow dry, ear cleaning, and fragrance finish." },
@@ -65,6 +104,7 @@ let currentFilter = "all";
 let loggedInEmail = localStorage.getItem(STORAGE_KEYS.ownerEmail) || "";
 let activeProductId = "";
 let productsExpanded = false;
+let firebaseProductsEmpty = false;
 
 const qs = (selector) => document.querySelector(selector);
 const qsa = (selector) => [...document.querySelectorAll(selector)];
@@ -121,7 +161,7 @@ function readImageFile(file) {
 }
 
 function isOwner() {
-  return loggedInEmail.trim().toLowerCase() === OWNER_EMAIL;
+  return ADMIN_EMAILS.includes(loggedInEmail.trim().toLowerCase());
 }
 
 function isLoggedIn() {
@@ -148,10 +188,29 @@ function getProductDescription(productItem) {
 async function fetchProducts() {
   try {
     const querySnapshot = await getDocs(collection(db, "products"));
-    products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    if (querySnapshot.empty) {
+      firebaseProductsEmpty = true;
+      products = structuredClone(defaultProducts);
+      if (isOwner()) await seedDefaultProducts();
+    } else {
+      firebaseProductsEmpty = false;
+      products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
     renderProducts();
   } catch (err) {
     console.error("Failed to load products from Firebase", err);
+    products = structuredClone(defaultProducts);
+    renderProducts();
+  }
+}
+
+async function seedDefaultProducts() {
+  if (!isOwner() || !firebaseProductsEmpty) return;
+  try {
+    await Promise.all(defaultProducts.map(({ id, ...productData }) => setDoc(doc(db, "products", id), productData)));
+    firebaseProductsEmpty = false;
+  } catch (err) {
+    console.error("Failed to seed default products", err);
   }
 }
 
@@ -456,6 +515,7 @@ function initEvents() {
     }
     if (deleteButton) {
       if (!isOwner()) return;
+      if (!window.confirm("Remove this product from Firebase?")) return;
       const id = deleteButton.dataset.deleteProduct;
       try {
         await deleteDoc(doc(db, "products", id));
@@ -483,6 +543,7 @@ function initEvents() {
   qs("#productGrid").addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!isOwner()) return;
+    if (!window.confirm("Save these product changes?")) return;
     const form = event.target;
     const id = form.dataset.form;
     const formData = new FormData(form);
@@ -531,6 +592,7 @@ function initEvents() {
   qs("#addProductForm").addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!isOwner()) return;
+    if (!window.confirm("Add this product to Firebase?")) return;
     const form = event.target;
     const formData = new FormData(form);
     const name = formData.get("name").trim();
@@ -586,6 +648,7 @@ function initEvents() {
   qs("#faqList").addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!isOwner()) return;
+    if (!window.confirm("Save this FAQ answer?")) return;
     const form = event.target;
     const id = form.dataset.faqId;
     const answer = new FormData(form).get("answer").trim();
@@ -604,6 +667,7 @@ function initEvents() {
   qs("#faqList").addEventListener("click", async (event) => {
     const deleteButton = event.target.closest("[data-delete-faq]");
     if (!deleteButton || !isOwner()) return;
+    if (!window.confirm("Delete this FAQ question?")) return;
     const id = deleteButton.dataset.deleteFaq;
     
     try {
@@ -657,6 +721,23 @@ function initEvents() {
   
   qs("#ownerLoginOpen").addEventListener("click", openOwnerModal);
   qs("#ownerModalClose").addEventListener("click", closeOwnerModal);
+
+  qs("#googleLoginBtn").addEventListener("click", async () => {
+    try {
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      loggedInEmail = userCredential.user.email || "";
+      localStorage.setItem(STORAGE_KEYS.ownerEmail, loggedInEmail);
+      renderOwnerState();
+      renderProducts();
+      renderFaqs();
+      if (isOwner()) await seedDefaultProducts();
+      closeOwnerModal();
+      showModal("Logged In", isOwner() ? "Admin catalog and FAQ tools are now available." : "You are now logged in.");
+    } catch (err) {
+      console.error(err);
+      showModal("Google Sign-In Failed", "Please try again or use email and password.");
+    }
+  });
   
   qs("#ownerLoginForm").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -664,17 +745,27 @@ function initEvents() {
     const password = qs("#ownerPasswordInput").value.trim();
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      let userCredential;
+      try {
+        userCredential = await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        if (!ADMIN_EMAILS.includes(email)) {
+          userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        } else {
+          throw err;
+        }
+      }
       loggedInEmail = userCredential.user.email;
       localStorage.setItem(STORAGE_KEYS.ownerEmail, loggedInEmail);
       renderOwnerState();
       renderProducts();
       renderFaqs();
+      if (isOwner()) await seedDefaultProducts();
       closeOwnerModal();
-      showModal("Logged In", "Admin catalog and FAQ tools are now available.");
+      showModal("Logged In", isOwner() ? "Admin catalog and FAQ tools are now available." : "You are now logged in.");
     } catch (err) {
       console.error(err);
-      showModal("Login Failed", "Invalid email or password.");
+      showModal("Login Failed", "Check the email/password, or use Google sign-in.");
     }
   });
 
@@ -725,7 +816,7 @@ function initEvents() {
 function init() {
   if (localStorage.getItem(STORAGE_KEYS.theme) === "light") document.body.classList.add("light");
   
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       loggedInEmail = user.email;
       localStorage.setItem(STORAGE_KEYS.ownerEmail, loggedInEmail);
@@ -736,6 +827,7 @@ function init() {
     renderOwnerState();
     renderProducts();
     renderFaqs();
+    if (isOwner()) await seedDefaultProducts();
   });
 
   fetchProducts();

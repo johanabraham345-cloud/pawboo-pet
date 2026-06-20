@@ -16,9 +16,12 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-const STORE_PHONE = "919072556363";
+const STORE_PHONE = "9199613 82604";
 const MAP_QUERY = "Pawboo Pets";
-const OWNER_EMAIL = "johanabraham345@gmail.com";
+const OWNER_EMAILS = [
+  "johanabraham345@gmail.com",
+  "pjsc06@gmail.com"
+];
 const STORAGE_KEYS = {
   cart: "pawbooCartV2",
   theme: "pawbooTheme",

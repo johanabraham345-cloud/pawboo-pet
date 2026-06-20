@@ -16,12 +16,13 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-const STORE_PHONE = "9199613 82604";
+const STORE_PHONE = "919961382604";
 const MAP_QUERY = "Pawboo Pets";
 const OWNER_EMAILS = [
   "johanabraham345@gmail.com",
   "pjsc06@gmail.com"
 ];
+const OWNER_EMAIL = OWNER_EMAILS[0];
 const STORAGE_KEYS = {
   cart: "pawbooCartV2",
   theme: "pawbooTheme",
@@ -89,6 +90,7 @@ let currentFilter = "all";
 let loggedInEmail = localStorage.getItem(STORAGE_KEYS.ownerEmail) || "";
 let activeProductId = "";
 let productsLimit = 12;
+let productsOffset = 0;
 
 const qs = (selector) => document.querySelector(selector);
 const qsa = (selector) => [...document.querySelectorAll(selector)];
@@ -124,7 +126,15 @@ function createWhatsAppLink(message) {
 }
 
 function createMailLink(subject, body) {
-  return `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  return `mailto:${OWNER_EMAILS.join(",")}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+async function sendOwnerEmail(payload) {
+  return Promise.all(OWNER_EMAILS.map((email) => fetch("https://formsubmit.co/ajax/" + email, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify(payload)
+  })));
 }
 
 function createProductId(name) {
@@ -145,7 +155,7 @@ function readImageFile(file) {
 }
 
 function isOwner() {
-  return loggedInEmail.trim().toLowerCase() === OWNER_EMAIL;
+  return OWNER_EMAILS.includes(loggedInEmail.trim().toLowerCase());
 }
 
 function isLoggedIn() {
@@ -216,7 +226,8 @@ function renderProducts() {
     const matchesFilter = currentFilter === "all" || productItem.category === currentFilter;
     return matchesFilter && searchText.includes(term);
   });
-  const visibleProducts = filtered.slice(0, productsLimit);
+  if (productsOffset >= filtered.length) productsOffset = 0;
+  const visibleProducts = filtered.slice(productsOffset, productsOffset + productsLimit);
 
   qs("#adminCatalogActions").classList.toggle("hidden", !isOwner());
 
@@ -266,11 +277,11 @@ function renderProducts() {
   const moreWrap = qs(".product-more");
   const moreButton = qs("#productMoreBtn");
   const countText = qs("#productCountText");
-  const hasMore = filtered.length > productsLimit;
+  const hasMore = productsOffset + productsLimit < filtered.length;
   moreWrap.classList.toggle("hidden", !hasMore);
-  moreButton.textContent = `See ${Math.min(12, Math.max(filtered.length - productsLimit, 0))} more products`;
+  moreButton.textContent = `See next ${Math.min(12, Math.max(filtered.length - productsOffset - productsLimit, 0))} products`;
   countText.textContent = hasMore
-    ? `Showing ${visibleProducts.length} of ${filtered.length} products`
+    ? `Showing ${productsOffset + 1}-${productsOffset + visibleProducts.length} of ${filtered.length} products`
     : `${filtered.length} products shown`;
 }
 
@@ -474,18 +485,18 @@ function initEvents() {
   });
 
   qs("#productSearch").addEventListener("input", () => {
-    productsLimit = 12;
+    productsOffset = 0;
     renderProducts();
   });
   qs("#productMoreBtn").addEventListener("click", () => {
-    productsLimit += 12;
+    productsOffset += 12;
     renderProducts();
   });
 
   qsa("[data-filter]").forEach((button) => {
     button.addEventListener("click", () => {
       currentFilter = button.dataset.filter;
-      productsLimit = 12;
+      productsOffset = 0;
       qsa("[data-filter]").forEach((item) => item.classList.remove("active"));
       button.classList.add("active");
       renderProducts();
@@ -630,14 +641,10 @@ function initEvents() {
       input.value = "";
       renderFaqs();
       
-      // Silently email the admin
-      fetch("https://formsubmit.co/ajax/" + OWNER_EMAIL, {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-            question: question,
-            _subject: "New Pawboo FAQ Question"
-        })
+      // Silently email all owner emails.
+      sendOwnerEmail({
+        question: question,
+        _subject: "New Pawboo FAQ Question"
       }).catch(e => console.log("Mail notification failed", e));
 
       showModal("Question Sent", "Your question has been saved and the team has been notified.");
@@ -688,20 +695,16 @@ function initEvents() {
     qs("#whatsappQuick").href = createWhatsAppLink(message);
     
     try {
-      const response = await fetch("https://formsubmit.co/ajax/" + OWNER_EMAIL, {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-            name: data.name,
-            phone: data.phone,
-            pet: data.pet,
-            need: data.need,
-            message: data.message,
-            _subject: `Pawboo Inquiry - ${data.need}`
-        })
+      const responses = await sendOwnerEmail({
+        name: data.name,
+        phone: data.phone,
+        pet: data.pet,
+        need: data.need,
+        message: data.message,
+        _subject: `Pawboo Inquiry - ${data.need}`
       });
       
-      if (response.ok) {
+      if (responses.every((response) => response.ok)) {
         showModal("Inquiry Sent", "Your inquiry has been successfully sent to the Pawboo team! We will contact you soon.");
         form.reset();
       } else {

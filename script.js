@@ -719,10 +719,15 @@ function initEvents() {
       renderProducts();
       renderFaqs();
       closeOwnerModal();
-      showModal("Logged In", "Admin catalog and FAQ tools are now available.");
+      if (isOwner()) {
+        showModal("Admin Access", "Admin catalog and FAQ tools are now available.");
+      } else {
+        showModal("Logged In", `Welcome back! You are logged in as ${loggedInEmail}.`);
+      }
     } catch (err) {
       console.error(err);
-      showModal("Login Failed", err.message);
+      closeOwnerModal();
+      showModal("Google Sign-In Failed", "Please ensure Google Sign-In is enabled in your Firebase Console and this domain is added to Authorized Domains.");
     }
   });
 
@@ -739,10 +744,15 @@ function initEvents() {
       renderProducts();
       renderFaqs();
       closeOwnerModal();
-      showModal("Logged In", "Admin catalog and FAQ tools are now available.");
+      if (isOwner()) {
+        showModal("Admin Access", "Admin catalog and FAQ tools are now available.");
+      } else {
+        showModal("Logged In", `Welcome back! You are logged in as ${loggedInEmail}.`);
+      }
     } catch (err) {
       console.error(err);
-      showModal("Login Failed", "Invalid email or password.");
+      closeOwnerModal();
+      showModal("Login Failed", "Invalid email or password. Please try again.");
     }
   });
 

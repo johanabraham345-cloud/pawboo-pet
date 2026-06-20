@@ -203,19 +203,19 @@
 
       <section class="section faq-section" id="faq">
         <div class="section-heading">
-          <p class="eyebrow">Questions</p>
-          <h2>FAQ</h2>
-          <p>Ask product, grooming, delivery, or care questions. Replies appear here when the team answers.</p>
-        </div>
-        <div class="login-status" id="loginStatus">
-          <span>You can browse without logging in.</span>
-          <button class="btn compact" id="faqOwnerLogin" type="button">Login</button>
-        </div>
-        <form class="faq-form" id="faqForm">
-          <input id="faqInput" type="text" placeholder="Ask about delivery, grooming, food brands..." required />
-          <button class="btn primary" type="submit">Ask Question</button>
-        </form>
-        <div class="faq-list" id="faqList"></div>
+        <p class="eyebrow">Questions</p>
+        <h2>FAQ</h2>
+        <p>Ask product, grooming, delivery, or care questions. Replies appear here when the team answers.</p>
+      </div>
+      
+      <div id="loginStatus" class="login-status"></div>
+      
+      <form id="faqForm" class="faq-form">
+        <input id="faqInput" type="text" placeholder="Ask about delivery, grooming, food brands..." required aria-label="Ask a question">
+        <button class="btn primary" type="submit">Ask Question</button>
+      </form>
+      
+      <div id="faqList" class="faq-list"></div>
       </section>
 
       <section class="section inquiry-section" id="inquiries">

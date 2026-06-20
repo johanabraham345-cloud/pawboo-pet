@@ -508,6 +508,7 @@ function initEvents() {
     }
     if (deleteButton) {
       if (!isOwner()) return;
+      if (!confirm("Are you sure you want to delete this product?")) return;
       const id = deleteButton.dataset.deleteProduct;
       try {
         await deleteDoc(doc(db, "products", id));
@@ -628,8 +629,18 @@ function initEvents() {
       faqs.unshift({ id: docRef.id, question: question, answer: "Thanks for asking. Pawboo team will answer this shortly." });
       input.value = "";
       renderFaqs();
-      window.location.href = createMailLink("New Pawboo FAQ Question", `A customer asked:\n\n${question}\n\nThe team can reply from the Pawboo website.`);
-      showModal("Question Sent", `Your question has been saved to Firebase and emailed to ${OWNER_EMAIL}.`);
+      
+      // Silently email the admin
+      fetch("https://formsubmit.co/ajax/" + OWNER_EMAIL, {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+            question: question,
+            _subject: "New Pawboo FAQ Question"
+        })
+      }).catch(e => console.log("Mail notification failed", e));
+
+      showModal("Question Sent", "Your question has been saved and the team has been notified.");
     } catch (err) {
       showModal("Error", "Could not save question.");
     }
@@ -656,6 +667,7 @@ function initEvents() {
   qs("#faqList").addEventListener("click", async (event) => {
     const deleteButton = event.target.closest("[data-delete-faq]");
     if (!deleteButton || !isOwner()) return;
+    if (!confirm("Are you sure you want to delete this FAQ?")) return;
     const id = deleteButton.dataset.deleteFaq;
     
     try {
@@ -668,14 +680,36 @@ function initEvents() {
     }
   });
 
-  qs("#inquiryForm").addEventListener("submit", (event) => {
+  qs("#inquiryForm").addEventListener("submit", async (event) => {
     event.preventDefault();
-    const data = Object.fromEntries(new FormData(event.target).entries());
+    const form = event.target;
+    const data = Object.fromEntries(new FormData(form).entries());
     const message = `Pawboo inquiry\n\nName: ${data.name}\nPhone: ${data.phone}\nPet: ${data.pet}\nNeed: ${data.need}\nMessage: ${data.message}`;
     qs("#whatsappQuick").href = createWhatsAppLink(message);
-    window.location.href = createMailLink(`Pawboo Inquiry - ${data.need}`, message);
-    showModal("Inquiry Email Opened", `Your inquiry has been addressed to ${OWNER_EMAIL}. You can also continue on WhatsApp.`);
-    event.target.reset();
+    
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/" + OWNER_EMAIL, {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+            name: data.name,
+            phone: data.phone,
+            pet: data.pet,
+            need: data.need,
+            message: data.message,
+            _subject: `Pawboo Inquiry - ${data.need}`
+        })
+      });
+      
+      if (response.ok) {
+        showModal("Inquiry Sent", "Your inquiry has been successfully sent to the Pawboo team! We will contact you soon.");
+        form.reset();
+      } else {
+        showModal("Error", "There was a problem sending your inquiry. Please contact us on WhatsApp instead.");
+      }
+    } catch (err) {
+      showModal("Error", "Could not connect to the mail server. Please use WhatsApp instead.");
+    }
   });
 
   qs("#cartOpen").addEventListener("click", () => {

@@ -20,7 +20,8 @@ const STORE_PHONE = "919961382604";
 const MAP_QUERY = "Pawboo Pets";
 const OWNER_EMAILS = [
   "johanabraham345@gmail.com",
-  "xxx@gmail.com"
+  "george.mdbrightway@gmail.com",
+  "pawboo.604@gmail.com"
 ];
 const OWNER_EMAIL = OWNER_EMAILS[0];
 const STORAGE_KEYS = {

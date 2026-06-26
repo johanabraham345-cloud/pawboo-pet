@@ -1,420 +1,442 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tokyo Table | Japanese Cafe</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<script src="https://unpkg.com/@phosphor-icons/web"></script>
-<link rel="stylesheet" href="style.css?v=4">
-</head>
-<body>
-
-<!-- Navbar -->
-<nav class="navbar" id="navbar">
-    <div class="nav-container">
-        <a href="#home" class="nav-logo-area">
-            <img src="images/logo-white.png" alt="Tokyo Table" class="nav-logo-img logo-on-dark">
-            <img src="images/logo-black.png" alt="Tokyo Table" class="nav-logo-img logo-on-light">
-        </a>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="#about">About</a></li>
-            <li><a href="#menu">Menu</a></li>
-            <li><a href="#order">Order</a></li>
-            <li><a href="#reviews">Reviews</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <div class="nav-actions">
-            <a href="#order" class="btn btn-outline nav-btn">Order Online</a>
-
-            <!-- Auth / Admin nav buttons -->
-            <button class="nav-user-btn" id="navSignInBtn" title="Admin Sign In" aria-label="Admin sign in">
-                <i class="ph ph-user-circle"></i>
-            </button>
-            <button class="nav-user-btn nav-admin-btn" id="navAdminBtn" title="Open Admin Panel" aria-label="Admin panel" style="display:none">
-                <i class="ph ph-shield-check"></i>
-                <span id="navUserEmail"></span>
-            </button>
-
-            <div class="mobile-menu-btn" id="mobileMenuBtn"><span></span><span></span></div>
-        </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Pawboo Pet Hypermarket offers premium pet food, accessories, grooming, delivery, and appointment support for dogs, cats, birds, fish, and small pets."
+    />
+    <meta name="theme-color" content="#101114" />
+    <meta property="og:title" content="Pawboo Pet Hypermarket" />
+    <meta property="og:description" content="Premium pet shopping, grooming, and care appointments in one fast single-page website." />
+    <meta property="og:type" content="website" />
+    <title>Pawboo Pet Hypermarket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="announcement">
+      <span>🐾 Same-day delivery in selected areas</span>
+      <a href="#inquiries" data-route="inquiries">Request grooming appointment or ask for product availability →</a>
     </div>
-</nav>
 
-<!-- Hero -->
-<section id="home" class="hero">
-    <div class="hero-slider">
-        <div class="hero-bg hero-slide active" style="background-image: url('images/Tokyo_Table_Exterior__7_.png');"></div>
-        <div class="hero-bg hero-slide" style="background-image: url('images/Tokyo_Table_Exterior__8_.png');"></div>
-        <div class="hero-bg hero-slide" style="background-image: url('images/Tokyo_table_Interior.png');"></div>
-    </div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content reveal">
-        <span class="hero-kicker">東京の食卓 / Tokyo cafe warmth</span>
-        <h1 class="hero-title">Tokyo Table</h1>
-        <p class="hero-text">Hand-pulled udon, crisp karaage and quiet izakaya warmth — a slice of Tokyo cafe culture, served fresh in Kerala.</p>
-        <div class="hero-buttons">
-            <a href="#menu" class="btn btn-primary">Explore Menu</a>
-            <a href="#contact" class="btn btn-outline">Find Us</a>
-        </div>
-    </div>
-</section>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Pawboo home">
+        <span class="brand-mark">🐾</span>
+        <span>
+          <strong>Pawboo</strong>
+          <small>Pet Hypermarket</small>
+        </span>
+      </a>
 
-<!-- Services -->
-<div class="services-bar">
-    <div class="container services-grid">
-        <div class="service-stamp">いらっしゃいませ</div>
-        <div class="service-item"><i class="ph ph-fork-knife"></i> Dine-in</div>
-        <div class="service-item"><i class="ph ph-shopping-bag"></i> Takeaway</div>
-        <div class="service-item"><i class="ph ph-moped"></i> Delivery</div>
-        <div class="service-item"><i class="ph ph-package"></i> Kerbside Pickup</div>
-        <div class="service-item"><i class="ph ph-hand-heart"></i> No-contact Delivery</div>
-    </div>
-</div>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
 
-<!-- About -->
-<section id="about" class="about section-padding">
-    <div class="container about-layout">
-        <div class="about-text reveal">
-            <span class="eyebrow">Our Story · 物語</span>
-            <h2 class="section-title">A Taste of Japan, Made in Kerala</h2>
-            <div class="title-underline"></div>
-            <p class="section-desc">From hand-pulled Udon bowls simmered slow to crisp, golden Karaage fried to order, every plate at Tokyo Table is built for a genuine Japanese café experience — unhurried, comforting, and full of flavour. Whether you join us in-house or order in, we bring that spirit straight to your table.</p>
-            <div class="about-stats">
-                <div class="about-stat"><strong>200+</strong><span>5-Star Reviews</span></div>
-                <div class="about-stat"><strong>29</strong><span>Dishes &amp; Drinks</span></div>
-                <div class="about-stat"><strong>7</strong><span>Days a Week</span></div>
-            </div>
-        </div>
-        <div class="about-image reveal">
-            <img src="images/Tokyo_Table_Exterior__1_.png" alt="Tokyo Table exterior">
-        </div>
-    </div>
-</section>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#shop" data-route="shop">Shop</a>
+        <a href="#grooming" data-route="grooming">Grooming</a>
+        <a href="#reviews" data-route="reviews">Reviews</a>
+        <a href="#location" data-route="location">Location</a>
+        <a href="#faq" data-route="faq">FAQ</a>
+        <a href="#inquiries" data-route="inquiries">Inquiries</a>
+      </nav>
 
-<!-- Menu -->
-<section id="menu" class="menu section-padding">
-    <div class="container">
-        <div class="section-header reveal">
-            <span class="eyebrow">Menu · 献立</span>
-            <h2 class="section-title">Culinary Masterpieces</h2>
-            <div class="title-underline center"></div>
-        </div>
-        <div class="menu-tabs reveal">
-            <button class="tab-btn active" data-filter="all">All Items</button>
-            <button class="tab-btn" data-filter="udon">Udon</button>
-            <button class="tab-btn" data-filter="sides">Sides</button>
-            <button class="tab-btn" data-filter="drinks">Beverages</button>
-            <button class="tab-btn" data-filter="dessert">Dessert</button>
-        </div>
-        <div class="menu-grid reveal" id="menuGrid"></div>
-        <div class="menu-actions reveal">
-            <button class="btn btn-outline see-more-btn" id="seeMoreMenu" type="button">See More</button>
-        </div>
-    </div>
-</section>
+      <div class="header-actions">
+        <button class="owner-button" id="ownerLoginOpen" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Login
+        </button>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Change theme">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </button>
+        <button class="cart-button" id="cartOpen" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Cart <span id="cartCount">0</span>
+        </button>
+      </div>
+    </header>
 
-<!-- Order -->
-<section id="order" class="order section-padding">
-    <div class="container">
-        <div class="section-header reveal">
-            <span class="eyebrow">Order · 注文</span>
-            <h2 class="section-title">Build Your Table</h2>
-            <div class="title-underline center"></div>
-        </div>
-        <div class="order-layout reveal">
-            <div class="order-panel">
-                <h3>Delivery Details</h3>
-                <p class="panel-note">Add your favorites, enter your details, and send the final order directly through WhatsApp.</p>
-                <form id="checkout-form" class="checkout-form">
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label>Full Name</label>
-                            <input type="text" id="cust-name" required>
-                        </div>
-                        <div class="input-group">
-                            <label>Phone Number</label>
-                            <input type="tel" id="cust-phone" required>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label>Delivery Address</label>
-                        <input type="text" id="cust-address" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-full" id="submit-order" disabled><i class="ph ph-whatsapp-logo"></i> Send on WhatsApp</button>
-                </form>
-                <div class="order-success" id="order-success">
-                    <i class="ph ph-check-circle"></i>
-                    <h3>WhatsApp Order Ready</h3>
-                    <p class="section-desc">Your order opens in WhatsApp with all details filled in.</p>
-                </div>
-            </div>
-            <div class="cart-box">
-                <h3>Your Selections</h3>
-                <p class="panel-note">Review your table before sending it to us on WhatsApp.</p>
-                <div id="cart-items"><div class="empty-cart-msg">Your table is waiting. Choose a masterpiece from the menu.</div></div>
-                <div class="cart-total" id="cart-total">
-                    <span>Total</span>
-                    <span id="total-amount">₹0</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Reviews -->
-<section id="reviews" class="reviews section-padding">
-    <div class="container">
-        <div class="section-header reveal">
-            <span class="eyebrow">Reviews · 声</span>
-            <h2 class="section-title">What Guests Are Saying</h2>
-            <div class="title-underline center"></div>
-        </div>
-        <div class="reviews-grid reveal">
-            <div class="review-card">
-                <div class="review-header">
-                    <img src="images/avatar-joel.png" alt="Joel Davis" class="review-avatar-img">
-                    <div class="review-meta"><h4>Joel Davis</h4><span class="review-badge">Local Guide · 25 reviews · 41 photos</span></div>
-                </div>
-                <div class="review-rating"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><span class="review-time">4 months ago</span></div>
-                <p class="review-text">I visited this place with my cousin and the food was really good as of what I tried but the customer service was one of the best I have had, the owner called us boss😄 and welcomed us in and he was very friendly. The items I would recommend would be the dry beef udon and the dynamite chicken, the dynamite chicken was soo good that by the time we thought of taking the photo we only had 3 piece remaining. Must try spot if you are near Aluva.</p>
-            </div>
-            <div class="review-card">
-                <div class="review-header">
-                    <img src="images/avatar-nisha.png" alt="Nisha Francis" class="review-avatar-img">
-                    <div class="review-meta"><h4>Nisha Francis</h4><span class="review-badge">Local Guide · 5 reviews · 5 photos</span></div>
-                </div>
-                <div class="review-rating"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><span class="review-time">3 months ago</span></div>
-                <p class="review-text">We tried the chicken noodles udon, and dynamite chicken — all were absolutely delicious! The dynamite chicken was perfectly crispy and flavourful, and the sauces were just amazing, adding the perfect taste to every bite. Overall, a great place to enjoy tasty food. Will definitely visit again! 😊</p>
-            </div>
-            <div class="review-card">
-                <div class="review-header">
-                    <img src="images/avatar-anannya.png" alt="Anannya Bhaskar" class="review-avatar-img">
-                    <div class="review-meta"><h4>Anannya Bhaskar</h4><span class="review-badge">6 reviews · 7 photos</span></div>
-                </div>
-                <div class="review-rating"><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><span class="review-time">4 months ago</span></div>
-                <p class="review-text">Absolutely loved our experience at Tokyo Table! We started with the Dynamite Chicken — hands down excellent. Then tried the rice bowl with fried chicken, fried chicken udon, and soupy beef udon — every single dish was exceptional, comforting, and bursting with flavor.</p>
-            </div>
-        </div>
-        <div class="reviews-action reveal">
-            <a href="https://www.google.com/maps/place/Tokyo+Table+Japanese+cafe/@10.0782234,76.3768474,16z/data=!4m15!1m8!3m7!1s0x3b080b001584c8e1:0x7284343944838302!2sTokyo+Table+Japanese+cafe!8m2!3d10.0782234!4d76.3768474!10e9!16s%2Fg%2F11l_4mglsk!3m5!1s0x3b080b001584c8e1:0x7284343944838302!8m2!3d10.0782234!4d76.3768474!16s%2Fg%2F11l_4mglsk?entry=ttu" target="_blank" class="btn btn-outline">
-                <i class="ph ph-google-logo"></i> View all 208 reviews on Google Maps
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-media" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Food. Grooming. Accessories. Care.</p>
+          <h1>Pawboo Pet Hypermarket</h1>
+          <p class="hero-copy">
+            A premium one-stop pet store experience with curated products, salon-grade grooming, fast local support,
+            and instant inquiry paths for every pet parent.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#shop" data-route="shop">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              Shop Products
             </a>
+            <a class="btn ghost" href="#grooming" data-route="grooming">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Grooming Appointment
+            </a>
+          </div>
+          <div class="hero-stats" aria-label="Store highlights">
+            <span><strong>34</strong> Live Products</span>
+            <span><strong>4.9</strong> Customer Rating</span>
+            <span><strong>7 Days</strong> Open</span>
+          </div>
         </div>
-    </div>
-</section>
+      </section>
 
-<!-- Contact -->
-<section id="contact" class="contact section-padding">
-    <div class="container contact-layout reveal">
-        <div class="contact-info">
-            <span class="eyebrow">Contact · 場所</span>
-            <h2 class="section-title">Get in Touch</h2>
-            <div class="title-underline"></div>
-            <p class="section-desc">Reach out for reservations, large orders, or a quiet bowl of udon after a long day. We look forward to hosting you.</p>
-            <div class="contact-links platform-links">
-                <a href="https://wa.me/917736696950" class="contact-card">
-                    <div class="icon-box"><i class="ph ph-whatsapp-logo"></i></div>
-                    <div class="contact-card-text"><span>WhatsApp &amp; Phone</span><strong>077366 96950</strong></div>
-                </a>
-                <a href="https://www.instagram.com/tokyo.table95/" target="_blank" class="contact-card">
-                    <div class="icon-box"><i class="ph ph-instagram-logo"></i></div>
-                    <div class="contact-card-text"><span>Instagram</span><strong>@tokyo.table95</strong></div>
-                </a>
-                <div class="contact-card">
-                    <div class="icon-box"><i class="ph ph-map-pin"></i></div>
-                    <div class="contact-card-text"><span>Location</span><strong>Aluva, Kerala, India</strong></div>
-                </div>
+      <section class="section service-strip" aria-label="Quick services">
+        <article>
+          <span>01</span>
+          <h2>Click & Collect</h2>
+          <p>Reserve pet food, toys, supplements, and accessories before visiting.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h2>Grooming Studio</h2>
+          <p>Bath, blow dry, nail care, trimming, spa packages, and puppy grooming.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h2>Nutrition Help</h2>
+          <p>Ask for breed, age, allergy, and budget-based recommendations.</p>
+        </article>
+      </section>
+
+      <section class="section shop-section" id="shop">
+        <div class="section-heading">
+          <p class="eyebrow">Product Catalog</p>
+          <h2>Shop Hypermarket</h2>
+          <p>Browse Pawboo products, add items to cart, and send your selected order directly on WhatsApp.</p>
+        </div>
+
+        <div class="shop-tools">
+          <label class="search-box">
+            <span>Search</span>
+            <input id="productSearch" type="search" placeholder="Food, toy, grooming..." autocomplete="off" />
+          </label>
+          <div class="filter-tabs" role="tablist" aria-label="Product categories">
+            <button class="active" type="button" data-filter="all">All</button>
+            <button type="button" data-filter="food">Food</button>
+            <button type="button" data-filter="treats">Treats</button>
+            <button type="button" data-filter="grooming">Grooming</button>
+            <button type="button" data-filter="accessory">Accessories</button>
+            <button type="button" data-filter="toy">Toys</button>
+            <button type="button" data-filter="bird">Bird</button>
+          </div>
+          <div class="admin-catalog-actions hidden" id="adminCatalogActions">
+            <button class="btn compact primary" id="addProductOpen" type="button">+ Add Product</button>
+            <button class="btn compact" id="resetCatalog" type="button">Reset Catalog</button>
+          </div>
+        </div>
+
+        <div class="product-grid" id="productGrid" aria-live="polite"></div>
+        <div class="product-more">
+          <p id="productCountText"></p>
+          <button class="btn compact" id="productMoreBtn" type="button">See more products</button>
+        </div>
+      </section>
+
+      <section class="section grooming-section" id="grooming">
+        <div class="section-heading">
+          <p class="eyebrow">Salon Services</p>
+          <h2>Grooming Studio</h2>
+          <p>Premium grooming packages for dogs and cats, with quick appointments and WhatsApp confirmation.</p>
+        </div>
+
+        <div class="grooming-layout">
+          <div class="grooming-image" aria-label="Professional pet grooming studio"></div>
+          <div class="package-list" id="packageList"></div>
+        </div>
+      </section>
+
+      <section class="section reviews-section" id="reviews">
+        <div class="section-heading">
+          <p class="eyebrow">Customer Love</p>
+          <h2>Reviews</h2>
+          <p>Real pet parents trust Pawboo for gentle grooming, helpful care, and a clean, welcoming studio experience.</p>
+        </div>
+        <div class="google-rating">
+          <div>
+            <span class="rating-stars">★★★★★</span>
+            <strong>4.9 on Google</strong>
+          </div>
+          <p>Based on 70 customer reviews</p>
+          <a class="btn compact" href="https://www.google.com/search?q=Pawboo+Pets+reviews" target="_blank" rel="noreferrer">View Google Reviews →</a>
+        </div>
+        <div class="review-masonry" id="reviewGrid"></div>
+      </section>
+
+      <section class="section location-section" id="location">
+        <div class="section-heading">
+          <p class="eyebrow">Find Us</p>
+          <h2>Pawboo on Google Maps</h2>
+          <p>Use the embedded map for quick directions, or open the location in Google Maps before visiting.</p>
+        </div>
+
+        <div class="location-layout">
+          <div class="map-shell">
+            <iframe
+              title="Pawboo Pets Google Maps location"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Pawboo%20Pets&output=embed">
+            </iframe>
+          </div>
+
+          <aside class="visit-card">
+            <span class="badge">Google Maps</span>
+            <h3>Pawboo Pets</h3>
+            <p>Search-ready map embed for Pawboo Pets. Replace the query with your exact Google Business Profile address if needed.</p>
+            <div class="visit-list">
+              <span>📅 Open daily: 9:00 AM - 9:30 PM</span>
+              <span>🛍️ Products, grooming, food, accessories</span>
+              <span>📱 Call or WhatsApp before visiting for stock checks</span>
             </div>
+            <a class="btn primary" id="mapLink" href="https://www.google.com/maps/search/?api=1&query=Pawboo%20Pets" target="_blank" rel="noreferrer">Open Google Maps →</a>
+          </aside>
         </div>
-        <div class="contact-map">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.4!2d76.3768!3d10.0782!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b080b001584c8e1%3A0x7284343944838302!2sTokyo%20Table%20Japanese%20cafe!5e0!3m2!1sen!2sin!4v1" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-        </div>
-    </div>
-</section>
+      </section>
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="container footer-content footer-rich">
+      <section class="section faq-section" id="faq">
+        <div class="section-heading">
+        <p class="eyebrow">Questions</p>
+        <h2>FAQ</h2>
+        <p>Ask product, grooming, delivery, or care questions. Replies appear here when the team answers.</p>
+      </div>
+      
+      <div id="loginStatus" class="login-status"></div>
+      
+      <form id="faqForm" class="faq-form">
+        <input id="faqInput" type="text" placeholder="Ask about delivery, grooming, food brands..." required aria-label="Ask a question">
+        <button class="btn primary" type="submit">Ask Question</button>
+      </form>
+      
+      <div id="faqList" class="faq-list"></div>
+      </section>
+
+      <section class="section inquiry-section" id="inquiries">
+        <div class="section-heading">
+          <p class="eyebrow">Contact Hub</p>
+          <h2>Inquiries & Appointments</h2>
+          <p>Send a product request, grooming appointment, bulk order, or partnership inquiry.</p>
+        </div>
+
+        <div class="inquiry-grid">
+          <form class="inquiry-form" id="inquiryForm">
+            <div class="form-row">
+              <label>Name<input name="name" type="text" required /></label>
+              <label>Phone<input name="phone" type="tel" required /></label>
+            </div>
+            <div class="form-row">
+              <label>Pet Type
+                <select name="pet">
+                  <option>Dog</option>
+                  <option>Cat</option>
+                  <option>Bird</option>
+                  <option>Fish</option>
+                  <option>Small Pet</option>
+                </select>
+              </label>
+              <label>Need
+                <select name="need">
+                  <option>Product Availability</option>
+                  <option>Grooming Appointment</option>
+                  <option>Home Delivery</option>
+                  <option>Nutrition Advice</option>
+                  <option>Bulk Order</option>
+                </select>
+              </label>
+            </div>
+            <label>Message<textarea name="message" rows="5" placeholder="Tell us what you need..." required></textarea></label>
+            <button class="btn primary" type="submit">Submit Inquiry</button>
+          </form>
+
+          <aside class="contact-panel">
+            <h3>Visit Pawboo</h3>
+            <p>Pawboo Pets, Kerala, India</p>
+            <p>Open daily: 9:00 AM - 9:30 PM</p>
+            <a class="btn ghost" href="#location" data-route="location">View Map</a>
+            <a class="btn whatsapp" id="whatsappQuick" href="#" target="_blank" rel="noreferrer">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp Now
+            </a>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-content">
         <div class="footer-brand">
-            <img src="images/logo-white.png" alt="Tokyo Table" class="footer-logo-img">
-            <p>Japanese cafe comfort in Aluva, serving udon, karaage, matcha, coffee, and fresh-made sides.</p>
+          <span class="brand-mark">🐾</span>
+          <strong>Pawboo</strong> Pet Hypermarket
         </div>
-        <div class="footer-column">
-            <h4>Explore</h4>
-            <a href="#about">Our Story</a>
-            <a href="#menu">Culinary Masterpieces</a>
-            <a href="#reviews">Guest Reviews</a>
-            <a href="#order">Order on WhatsApp</a>
+        <p>Premium pet food, grooming, accessories, and care — Kerala, India</p>
+        <p class="footer-links">
+          <a href="#shop" data-route="shop">Shop</a>
+          <a href="#grooming" data-route="grooming">Grooming</a>
+          <a href="#reviews" data-route="reviews">Reviews</a>
+          <a href="#location" data-route="location">Location</a>
+          <a href="#faq" data-route="faq">FAQ</a>
+          <a href="#inquiries" data-route="inquiries">Inquiries</a>
+        </p>
+        <small>© 2026 Pawboo Pet Hypermarket. All rights reserved.</small>
+      </div>
+    </footer>
+
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+      <div class="cart-panel">
+        <div class="cart-head">
+          <h2>🛒 Your Cart</h2>
+          <button class="icon-btn" id="cartClose" type="button" aria-label="Close cart">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
         </div>
-        <div class="footer-column footer-platforms">
-            <h4>Platforms</h4>
-            <a href="https://wa.me/917736696950" target="_blank"><i class="ph ph-whatsapp-logo"></i> WhatsApp</a>
-            <a href="https://www.instagram.com/tokyo.table95/" target="_blank"><i class="ph ph-instagram-logo"></i> Instagram</a>
-            <a href="https://www.google.com/maps/place/Tokyo+Table+Japanese+cafe/@10.0782234,76.3768474,16z" target="_blank"><i class="ph ph-map-pin"></i> Google Maps</a>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-total">
+          <span>Total</span>
+          <strong id="cartTotal">Rs 0</strong>
         </div>
-        <div class="footer-column">
-            <h4>Visit</h4>
-            <span>Aluva, Kerala, India</span>
-            <span>Dine-in · Takeaway · Delivery</span>
-            <span>Fresh bowls, every day</span>
-        </div>
+        <button class="btn whatsapp full" id="checkoutBtn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Checkout on WhatsApp
+        </button>
+      </div>
+    </aside>
+
+    <div class="modal" id="successModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <button class="icon-btn modal-close" id="modalClose" type="button" aria-label="Close modal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <p class="eyebrow">Request Received</p>
+        <h2 id="modalTitle">Thank you</h2>
+        <p id="modalMessage">Our team will contact you shortly.</p>
+        <button class="btn primary" id="modalOk" type="button">Close</button>
+      </div>
     </div>
-    <div class="footer-bottom"><p>&copy; 2026 Tokyo Table. All rights reserved. Japanese Cafe · Udon · Karaage · Matcha · Aluva, Kerala.</p></div>
-</footer>
 
-<!-- Item Detail Modal -->
-<div id="itemModal" class="modal-backdrop">
-    <div class="modal-window">
-        <button class="modal-close" id="modalClose"><i class="ph ph-x"></i></button>
-        <div class="modal-layout">
-            <div class="modal-image-col"><span class="modal-jp">いただきます</span><i class="ph ph-bowl-food"></i><p>Prepared fresh to order</p></div>
-            <div class="modal-info-col">
-                <span class="modal-category" id="modalCat"></span>
-                <h2 class="modal-title" id="modalTitle"></h2>
-                <div class="modal-price" id="modalPrice"></div>
-                <div class="modal-details"><h3>Dish Details</h3><p id="modalIng"></p></div>
-                <button class="btn btn-primary btn-full modal-add-btn" id="modalAddBtn">Add to Order</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════════════════
-     AUTH MODAL
-══════════════════════════════════════════════════════════════════════════ -->
-<div id="authModal" class="auth-modal-backdrop">
-    <div class="auth-modal">
-        <button class="auth-close" id="authClose"><i class="ph ph-x"></i></button>
-        <div class="auth-header">
-            <img src="images/logo-black.png" alt="Tokyo Table" class="auth-logo">
-            <h2>Admin Sign In</h2>
-            <p>Access is restricted to authorised administrators only.</p>
-        </div>
-
-        <!-- Google -->
-        <button id="googleSignInBtn" class="btn-google">
-            <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332Z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58Z" fill="#EA4335"/></svg>
-            Continue with Google
+    <div class="modal" id="ownerModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <form class="modal-card login-card" id="ownerLoginForm">
+        <button class="icon-btn modal-close" id="ownerModalClose" type="button" aria-label="Close login">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <p class="eyebrow">Account</p>
+        <h2>Admin Login</h2>
+        <p>Enter your credentials to access admin features.</p>
+        
+        <button class="btn full google-login-btn" id="googleLoginBtn" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Sign in with Google
         </button>
 
-        <div class="auth-divider"><span>or sign in with email</span></div>
+        <div class="login-divider"><span>OR</span></div>
 
-        <!-- Email / Password -->
-        <form id="emailAuthForm" autocomplete="on">
-            <div class="input-group">
-                <label>Email</label>
-                <input type="email" id="authEmail" placeholder="admin@example.com" required>
-            </div>
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" id="authPassword" placeholder="••••••••" required>
-            </div>
-            <div class="auth-error" id="authError"></div>
-            <button type="submit" class="btn btn-primary btn-full" id="emailSubmitBtn">Sign In</button>
-        </form>
-
-        <p class="auth-toggle-line">
-            <span id="authModeLabel">Don't have an account? </span>
-            <button class="auth-toggle-btn" id="authToggleMode">Create account</button>
-        </p>
-    </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════════════════
-     ADMIN PANEL (slide-in sidebar)
-══════════════════════════════════════════════════════════════════════════ -->
-<div id="adminOverlay" class="admin-overlay"></div>
-
-<aside id="adminPanel" class="admin-panel">
-    <div class="admin-header">
-        <div>
-            <h2 class="admin-title"><i class="ph ph-shield-check"></i> Admin Panel</h2>
-            <p class="admin-user-line" id="adminUserEmail"></p>
-        </div>
-        <div class="admin-header-actions">
-            <button class="admin-btn-signout" id="adminSignOut"><i class="ph ph-sign-out"></i> Sign Out</button>
-            <button class="admin-close-btn" id="adminClose"><i class="ph ph-x"></i></button>
-        </div>
+        <label class="login-field">
+          <span class="field-label">Email</span>
+          <input id="ownerEmailInput" type="email" placeholder="you@example.com" required />
+        </label>
+        <label class="login-field">
+          <span class="field-label">Password</span>
+          <input id="ownerPasswordInput" type="password" placeholder="••••••••" required />
+        </label>
+        <button class="btn primary full" type="submit">Continue with Email</button>
+        <button class="btn ghost full hidden" id="ownerLogout" type="button">Logout</button>
+      </form>
     </div>
 
-    <div class="admin-body">
-
-        <!-- Seed banner (shown when Firestore is empty) -->
-        <div class="seed-banner" id="seedBanner" style="display:none">
-            <i class="ph ph-database"></i>
-            <div>
-                <strong>Menu not yet in database.</strong>
-                <p>Firestore is empty. Click to push the built-in 29 items to get started.</p>
+    <div class="modal" id="productModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card product-detail-card">
+        <button class="icon-btn modal-close" id="productModalClose" type="button" aria-label="Close product details">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="product-detail">
+          <figure><img id="detailImage" src="" alt="" /></figure>
+          <div class="product-detail-copy">
+            <span class="badge" id="detailBadge">Product</span>
+            <h2 id="detailName">Product Name</h2>
+            <strong class="detail-price" id="detailPrice">Rs 0</strong>
+            <p id="detailDescription">Product description.</p>
+            <dl class="detail-list">
+              <div><dt>Category</dt><dd id="detailCategory">Food</dd></div>
+              <div><dt>Availability</dt><dd id="detailStock">In Store</dd></div>
+              <div><dt>Store Support</dt><dd>Ask Pawboo for size, variant, and delivery availability.</dd></div>
+            </dl>
+            <div class="detail-actions">
+              <button class="btn primary" id="detailAddCart" type="button">Add to Cart</button>
+              <button class="btn whatsapp" id="detailWhatsapp" type="button">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Ask on WhatsApp
+              </button>
             </div>
-            <button class="btn btn-primary" id="seedMenuBtn">Initialize Menu</button>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Add / Edit form -->
-        <div class="admin-form-section">
-            <h3 class="admin-section-title" id="addFormTitle">Add New Item</h3>
-            <form id="adminAddForm" class="admin-add-form">
-                <input type="hidden" id="editItemId">
-                <div class="admin-form-row">
-                    <div class="input-group">
-                        <label>Item Name</label>
-                        <input type="text" id="addName" placeholder="e.g. Chicken Udon" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Category</label>
-                        <select id="addCategory" required>
-                            <option value="">Select…</option>
-                            <option value="udon">Udon</option>
-                            <option value="sides">Sides</option>
-                            <option value="drinks">Beverages</option>
-                            <option value="dessert">Dessert</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Price (₹)</label>
-                        <input type="number" id="addPrice" placeholder="e.g. 230" min="1" required>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Ingredients / Description</label>
-                    <textarea id="addIngredients" rows="2" placeholder="Short description of the dish…" required></textarea>
-                </div>
-                <div class="admin-form-actions">
-                    <button type="submit" class="btn btn-primary" id="addSubmitBtn">Add Item</button>
-                    <button type="button" class="btn btn-outline" id="addCancelBtn" style="display:none">Cancel Edit</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Item list -->
-        <div class="admin-list-section">
-            <div class="admin-list-header">
-                <h3 class="admin-section-title">Menu Items <span class="admin-count" id="adminItemCount">0</span></h3>
-                <div class="admin-tabs">
-                    <button class="admin-tab-btn active" data-filter="all">All</button>
-                    <button class="admin-tab-btn" data-filter="udon">Udon</button>
-                    <button class="admin-tab-btn" data-filter="sides">Sides</button>
-                    <button class="admin-tab-btn" data-filter="drinks">Drinks</button>
-                    <button class="admin-tab-btn" data-filter="dessert">Dessert</button>
-                </div>
+    <div class="modal" id="addProductModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <form class="modal-card add-product-card" id="addProductForm">
+        <button class="icon-btn modal-close" id="addProductClose" type="button" aria-label="Close add product">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <p class="eyebrow">Admin Catalog</p>
+        <h2>Add Product</h2>
+        <div class="add-product-layout">
+          <div class="add-product-image-section">
+            <label class="image-upload-area" id="imageUploadArea">
+              <input id="newProductImage" name="imageFile" type="file" accept="image/*" class="hidden" />
+              <img id="imagePreview" src="" alt="" class="hidden" />
+              <div class="upload-placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                <span>Click to upload image</span>
+              </div>
+            </label>
+            <label class="login-field">
+              <span class="field-label">Or Image URL</span>
+              <input name="imageUrl" type="url" placeholder="Paste an image link..." />
+            </label>
+          </div>
+          <div class="add-product-form-section">
+            <div class="form-row">
+              <label><span class="field-label">Title</span><input name="name" type="text" required /></label>
+              <label><span class="field-label">Price (Rs)</span><input name="price" type="number" min="0" placeholder="Empty for Ask price" /></label>
             </div>
-            <div id="adminItemsList" class="admin-items-list">
-                <p class="admin-empty">Loading menu…</p>
+            <div class="form-row">
+              <label><span class="field-label">Category</span>
+                <select name="category">
+                  <option value="food">Food</option>
+                  <option value="treats">Treats</option>
+                  <option value="grooming">Grooming</option>
+                  <option value="accessory">Accessories</option>
+                  <option value="toy">Toys</option>
+                  <option value="bird">Bird</option>
+                </select>
+              </label>
+              <label><span class="field-label">Status</span><input name="stock" type="text" value="In Stock" required /></label>
             </div>
+            <label class="login-field"><span class="field-label">Description</span><textarea name="description" rows="4" placeholder="Short product description..." required></textarea></label>
+          </div>
         </div>
+        <button class="btn primary full" type="submit" style="margin-top: 18px;">Save Product</button>
+      </form>
+    </div>
 
-    </div><!-- /admin-body -->
-</aside>
-
-<!-- ══════════════════════════════════════════════════════════════════════════
-     SCRIPTS — Firebase must load before firebase-config.js
-══════════════════════════════════════════════════════════════════════════ -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="firebase-config.js"></script>
-<script src="app.js?v=4"></script>
-<script src="admin.js?v=4"></script>
-</body>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "PetStore",
+        "name": "Pawboo Pet Hypermarket",
+        "address": "Kerala, India",
+        "telephone": "+91 9961382604",
+        "openingHours": "Mo-Su 09:00-21:30",
+        "areaServed": "Kerala",
+        "sameAs": ["https://wa.me/919961382604"]
+      }
+    </script>
+    <script type="module" src="script.js?v=20260620-whatsapp-9961382604"></script>
+  </body>
 </html>
